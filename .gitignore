@@ -1,0 +1,33 @@
+# Node (React/Vite)
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Python (Django)
+__pycache__/
+*.py[cod]
+*.sqlite3
+venv/
+env/
+*.env
+db.sqlite3
+media/
+uploads/
+**/migrations/*.pyc
+**/migrations/__pycache__/
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor configs
+.vscode/
+.idea/
+.DS_Store
+*.sw?
+

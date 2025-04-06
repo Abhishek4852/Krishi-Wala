@@ -1,0 +1,64 @@
+import React, { useState } from "react";
+import jsonData from "./address_data.json"; // Import JSON file
+
+function SelectAddress() {
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [districts, setDistricts] = useState([]);
+  const [villages, setVillages] = useState([]);
+
+  // Handle State Selection
+  const handleStateChange = (e) => {
+    const state = e.target.value;
+    setSelectedState(state);
+    setSelectedDistrict(""); // Reset district
+    setVillages([]); // Reset villages
+    setDistricts(Object.keys(jsonData[state] || {})); // Get districts
+  };
+
+  // Handle District Selection
+  const handleDistrictChange = (e) => {
+    const district = e.target.value;
+    setSelectedDistrict(district);
+    setVillages(jsonData[selectedState][district] || []); // Get villages
+  };
+
+  return (
+    <div className="text-black">
+      {/* <h2 className="text-black">Select Address</h2> */}
+
+      {/* State Dropdown */}
+      <select onChange={handleStateChange} value={selectedState}>
+        <option value="">Select State</option>
+        {Object.keys(jsonData).map((state, index) => (
+          <option key={index} value={state}>
+            {state}
+          </option>
+        ))}
+      </select>
+
+      {/* District Dropdown (Enabled only when a state is selected) */}
+      <select onChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState}>
+        <option value="">Select District</option>
+        {districts.map((district, index) => (
+          <option key={index} value={district}>
+            {district}
+          </option>
+        ))}
+      </select>
+
+      {/* Village Dropdown (Enabled only when a district is selected) */}
+      <select disabled={!selectedDistrict}>
+        <option value="">Select Village</option>
+        {villages.map((village, index) => (
+          <option key={index} value={village}>
+            {village}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+export default SelectAddress;
+

@@ -1,0 +1,13 @@
+{
+    "Plowing": ["Plow", "Disc Plow", "Chisel Plow", "Rotavator", "Subsoiler", "Cultivator"],
+    "Sowing & Planting": ["Seed Drill", "Transplanter", "Fertilizer Spreader", "Planter"],
+    "Ridge & Bund Making": ["Ridge Plow", "Bed Shaper", "Furrow Plow", "Inter-cultivator"],
+    "Irrigation": ["Sprinkler System", "Drip Irrigation System", "Diesel/Electric Motor Pump", "Fogging Machine"],
+    "Weeding": ["Hand Hoe", "Wheel Hoe", "Rotary Weeder", "Electric Weeder"],
+    "Harvesting": ["Sickle", "Harvester", "Thresher", "Combine Harvester"],
+    "Straw & Fodder Processing": ["Chaff Cutter Machine", "Forage Harvester", "Hay Baler"],
+    "Transportation": ["Tractor", "Trolley/Trailer", "Bullock Cart", "JCB", "Truck"],
+    "Crop Storage & Cleaning": ["Winnowing Machine", "Spinning Machine", "Grain Dryer", "Cold Storage"],
+    "Pesticide Spraying": ["Hand Sprayer", "Foot Sprayer", "Power Sprayer", "Boom Sprayer", "Fogging Machine", "Drone Sprayer"]
+  }
+  

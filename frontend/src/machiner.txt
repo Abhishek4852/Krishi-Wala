@@ -1,0 +1,36 @@
+
+        async function senddata(){
+            
+          try{
+          const response =  await fetch("http://127.0.0.1:8000/machine_registration/",
+            {
+              method:"POST",
+              headers:{
+                "Content-Type":"application/json"
+              },
+              body:JSON.stringify(formData)
+            })
+            
+            if(!response.ok){
+                const error = await response.text();
+              throw new Error(error);
+            }
+          const data = await response.json();
+           console.log(data);
+           alert("registered successfully")
+           navigate("/");
+
+          }
+          catch(error){
+            if(error.name === "TypeError"){
+              alert("Network Connection failed")
+            console.log("Network Connection failed ",error.message);
+            }else{ 
+              alert("Something went wrong")
+             console.log("other error ",error.message);
+          }}
+          
+             
+        }
+      
+      senddata();

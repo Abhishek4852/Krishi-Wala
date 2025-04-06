@@ -1,0 +1,97 @@
+import React from 'react'
+import SelectAddress from './SelectAddress'
+import BankDetails from './BankDetails'
+function PostLand() {
+
+    
+  
+  return (
+    <>
+    <div className='text-black h-full w-full flex' >
+        <div className='m-auto text-black min-h-0 max-w-fit ml-96 mr-7 flex-col flex-wrap bg-neutral-200 rounded-2xl '>
+            
+            <div className=' text-2xl font-bold mt-4  h-full w-full flex'>
+                <div className='m-auto mt-10'>
+                Land Registration Form 
+                </div>
+                
+            </div>
+
+            <div className='ml-11 mt-10' >
+              <span className="text-red-500">*</span>
+              <label htmlFor="name"> Enter Land Owner Name</label>
+              <input type="text" name="name" className='bg-neutral-300 ml-8 w' />
+            </div>
+            <div className='ml-10 mt-5'>
+            
+            <p className='mb-1'> <span className="text-red-500">*</span>Select Land Location</p>
+             <p className=''>  <SelectAddress/>   </p>  
+            </div>
+            <div className='ml-11 mt-5' >
+            <span className="text-red-500">*</span>
+                <label htmlFor="mobile"> Enter Mobile No.</label>
+                <input type="text" name="name" className='bg-neutral-300 ml-8 w' />
+                <input type="text" className='' />
+            </div>
+            <div className='ml-11 mt-5' >
+            <span className="text-red-500">*</span>
+            <label htmlFor="name"> Enter rent price pre acre</label>
+              <input type="text" name="name" className='bg-neutral-300 ml-8 w' />
+            </div>
+            <div className='ml-11 mt-5' >
+            <span className="text-red-500">*</span>
+            <label htmlFor="name">Enter Renting Period in months </label>
+            <input type="text" name="name" className='bg-neutral-300 ml-8 w' /> 
+            <br></br>
+            <span className="text-black">(ex 1,2,3...)</span>
+            </div>
+            <div className='ml-11 mt-5' >
+            <span className="text-red-500">*</span>
+            <label htmlFor="name"> Select Irrigation Source</label>
+              <select>
+                <option> River (if engine for irrigatio)</option>
+                <option> Canal (direct water supply no other things needed for irrigation)</option>
+                <option> Borewell and Well (if moter is needed for irrigation)</option>
+              </select>
+            </div>
+
+           
+            <div className='ml-11 mt-5 ' >
+            <span className="text-red-500">*</span>
+            <label htmlFor="name">Extra Failities provided by you like irrigation sourcer provided by you </label>
+            
+              <input type="text" className='bg-neutral-300 ml-8 mt-2' />
+            </div>
+
+            <div className=' text-xl' >
+            <BankDetails/>
+            </div>
+            
+            <div className='ml-11 mt-8' >
+            <label htmlFor="name">paste google map land location</label>
+              <input type="text" name="name" className='bg-neutral-300 ml-8 w' />
+              <p>how you find location ?</p>
+            </div>
+            
+            <div className="ml-11 mt-5">
+            <label htmlFor="landPhotos">Upload Land Photos</label>
+            <input
+              type="file"
+              name="landPhotos"
+            //   multiple
+            //   onChange={handleFileChange}
+              className="bg-neutral-300 ml-8 w"
+            />
+          </div>
+            
+            <div className='mt-5 w-full m-auto flex mb-10 ' >
+              <button className='text-white m-auto self-center mb-5'> Save Details</button>
+            </div>
+        </div>
+      
+    </div>
+    </>
+  )
+}
+
+export default PostLand
