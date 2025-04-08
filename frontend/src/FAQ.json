@@ -1,0 +1,389 @@
+{
+    "postLand": {
+      "faqData": [
+        {
+          "field": "landOwnerName",
+          "question": "How can I register my land?",
+          "answer": "You need to fill out the Land Registration Form including landowner's name, location, size, price, irrigation source, bank details, and map location."
+        },
+        {
+          "field": "landOwnerName",
+          "question": "Why is the landowner's name required?",
+          "answer": "It confirms that the land is being posted by the rightful owner."
+        },
+        {
+          "field": "location",
+          "question": "Which locations can I post land from?",
+          "answer": "You can post land from any village, district, or state in India with valid land documents."
+        },
+        {
+          "field": "mobileNumber",
+          "question": "Why do I need to provide my mobile number?",
+          "answer": "It is needed for communication with interested renters."
+        },
+        {
+          "field": "landSize",
+          "question": "Why is land size asked in acres?",
+          "answer": "To calculate rent per acre and total rent."
+        },
+        {
+          "field": "rentPrice",
+          "question": "Why are total rent price and rent per acre both required?",
+          "answer": "This helps renters understand overall cost and cost per unit area."
+        },
+        {
+          "field": "rentingPeriod",
+          "question": "What does renting period in months mean?",
+          "answer": "It's the number of months you want to rent the land (e.g., 1, 2, 3...)."
+        },
+        {
+          "field": "irrigationSource",
+          "question": "Why is irrigation source required?",
+          "answer": "It tells how suitable the land is for farming — borewell, canal, or rain-fed."
+        },
+        {
+          "field": "extraFacilities",
+          "question": "What can be included in extra facilities?",
+          "answer": "You can add electricity, tractor, water access, storage, or security."
+        },
+        {
+          "field": "bankDetails",
+          "question": "Why are bank details required?",
+          "answer": "So the tenant can transfer rent payments directly to your account."
+        },
+        {
+          "field": "mapLocation",
+          "question": "How to provide Google Map location?",
+          "answer": "Open Google Maps → Find your land → Share → Copy link → Paste in the form."
+        },
+        {
+          "field": "locationMethod",
+          "question": "What to fill in 'How did you find location'?",
+          "answer": "Mention if you used GPS, known landmarks, or Google Maps to find your land."
+        },
+        {
+          "field": "landPhotos",
+          "question": "How to upload land photos?",
+          "answer": "Click the upload section, choose photo from your device, and upload."
+        },
+        {
+          "field": "landPhotos",
+          "question": "Can I upload more than one photo?",
+          "answer": "Yes, multiple images can give a better idea of the land condition."
+        },
+        {
+          "field": "formSubmit",
+          "question": "What happens after submitting the form?",
+          "answer": "Your details will be verified and shown to suitable renters."
+        },
+        {
+          "question": "My image is not showing after upload. What should I do?",
+          "answer": "Check if the image is under 5MB and in correct format (JPG/PNG). Try re-uploading it."
+        },
+        {
+          "question": "Form is not submitting. What can be the reason?",
+          "answer": "Make sure all required fields are filled properly and your internet is working."
+        },
+        {
+          "question": "Can I edit details after form submission?",
+          "answer": "It depends on the platform settings. Check if there’s an edit option or contact support."
+        },
+        {
+          "question": "I am not getting any tenant contact. What should I do?",
+          "answer": "Make sure your listing is complete and attractive. You can also contact support for help."
+        },
+        {
+          "question": "Can I fill the form for someone else using my mobile number?",
+          "answer": "Yes, you can fill the form on behalf of someone else. Just make sure all land and bank details are correct."
+        },
+        {
+          "question": "If I post one land, how can I add more?",
+          "answer": "You can fill and submit the form again for each new land you want to post."
+        }
+      ]
+    },
+    "machineRegistration": {
+      "faqs": [
+        {
+          "question": "How can I register my agricultural machine?",
+          "answer": "You need to fill the 'Machine Registration Form' which includes details like owner name, mobile number, location (state, district, village), machine purpose, name, specifications, cost, quantity, and machine photo."
+        },
+        {
+          "question": "Why is the owner's name required?",
+          "answer": "It helps in verifying that the machine belongs to a legitimate person and ensures authenticity."
+        },
+        {
+          "question": "Why do I need to provide a mobile number?",
+          "answer": "Your mobile number will be used to contact you for verification or by those interested in hiring your machine."
+        },
+        {
+          "question": "How do I select my location?",
+          "answer": "Choose your State, then your District, and finally your Village from the dropdown menus provided in the form."
+        },
+        {
+          "question": "What is meant by 'Purpose of Machine'?",
+          "answer": "It refers to the agricultural activity the machine is used for, such as ploughing, harvesting, sowing, etc."
+        },
+        {
+          "question": "What should I write in 'Specification'?",
+          "answer": "You can mention details like the machine's capacity, horsepower, brand, or any special feature it has."
+        },
+        {
+          "question": "What does 'With Tractor' mean?",
+          "answer": "It asks whether the machine comes along with a tractor or not, which helps determine overall rental cost and utility."
+        },
+        {
+          "question": "Why do I need to mention hiring cost per acre and per hour?",
+          "answer": "This helps potential users understand how much they will need to pay for using your machine based on usage."
+        },
+        {
+          "question": "What does 'Quantity of Equipment' refer to?",
+          "answer": "It means how many units of the machine you have available for rental or use."
+        },
+        {
+          "question": "How can I upload the machine photo?",
+          "answer": "Click on the 'Upload Machine Photo' section, choose a photo from your device, and upload. Make sure the image size is less than 5MB."
+        },
+        {
+          "question": "Why is machine photo required?",
+          "answer": "A machine photo gives better clarity to the user and helps them visually verify the condition and type of machine."
+        },
+        {
+          "question": "Can I upload more than one photo?",
+          "answer": "If the system allows, yes — multiple photos help in showcasing different angles or parts of the machine."
+        },
+        {
+          "question": "What happens after form submission?",
+          "answer": "Your machine details will be verified and listed for others to view and contact you for rental."
+        }
+      ]
+    },
+    "labourRegistration": {
+        "faqData": [
+          {
+            "question": "How to register as a labourer?",
+            "answer": "Fill the Labour Registration Form with your name, mobile number, age, gender, location, work type, experience, wage, and bank details."
+          },
+          {
+            "question": "Can I register without uploading a profile picture?",
+            "answer": "Yes, but uploading a photo helps in better identification by employers."
+          },
+          {
+            "question": "My photo is not uploading. What should I do?",
+            "answer": "Check if the image is in JPG/PNG format and below 5MB. Try uploading again."
+          },
+          {
+            "question": "I don’t know my exact age. What should I enter?",
+            "answer": "Enter an approximate age. It helps employers understand your eligibility."
+          },
+          {
+            "question": "Which gender options are available in the form?",
+            "answer": "You can select Male or Female as per your identity."
+          },
+          {
+            "question": "Can I register if I am from a different district or state?",
+            "answer": "Yes, you can register from any state, district, or village in India."
+          },
+          {
+            "question": "What should I select in 'Work Type'?",
+            "answer": "Select the type of work you do like farming, construction, loading, etc."
+          },
+          {
+            "question": "What does 'Experience in years' mean?",
+            "answer": "Mention how many years you have been working in your selected field."
+          },
+          {
+            "question": "What is the wage field for?",
+            "answer": "Enter how much payment you expect and choose if it's per day or per hour."
+          },
+          {
+            "question": "Can I choose both Per Day and Per Hour wages?",
+            "answer": "No, select one option that suits your working style."
+          },
+          {
+            "question": "Why are bank details required?",
+            "answer": "So that your wage can be transferred directly to your bank account."
+          },
+          {
+            "question": "I don’t have a bank account. Can I still register?",
+            "answer": "You can register, but bank details are needed for payment through bank transfer."
+          },
+          {
+            "question": "What is IFSC Code and where can I find it?",
+            "answer": "IFSC Code is a unique bank code. You can find it on your passbook or bank's website."
+          },
+          {
+            "question": "Can I register on behalf of another labourer using my mobile number?",
+            "answer": "Yes, you can register for someone else. Just make sure the details are accurate."
+          },
+          {
+            "question": "If I register one labourer, how do I add more?",
+            "answer": "You can submit the form again separately for each labourer."
+          },
+          {
+            "question": "What is the benefit of creating a labourer profile?",
+            "answer": "Creating a labourer profile helps you get more job opportunities. Employers can directly contact you based on your experience, location, and skills. It also makes payment easier through bank transfer."
+          }
+        ]
+      },
+      "searchLand": {
+        "faqData": [
+          {
+            "question": "I selected state and district, but no villages are showing.",
+            "answer": "Please ensure your internet connection is stable. If the issue persists, try reloading the page or selecting the state and district again."
+          },
+          {
+            "question": "Land listings are not updating after I apply filters.",
+            "answer": "Click on the “Apply Filter” button after setting all filter values. If still not working, clear filters and try again."
+          },
+          {
+            "question": "Filter results show the same land multiple times.",
+            "answer": "This could be due to duplicate entries. Please report the issue using the contact form."
+          },
+          {
+            "question": "I want to filter land with a specific irrigation source like 'River', but no results are shown.",
+            "answer": "The platform shows only available lands based on your filter. Try selecting multiple irrigation sources or changing location."
+          },
+          {
+            "question": "The land price is showing as 0 or blank.",
+            "answer": "This means the land owner hasn’t provided the price. You can still contact them via the 'Contact' button for details."
+          },
+          {
+            "question": "I clicked on 'Book' but nothing happened.",
+            "answer": "Please make sure you are logged in. Booking actions may require user authentication."
+          },
+          {
+            "question": "How to contact landowner?",
+            "answer": "Click on the “Contact” button next to the land listing. It will show contact details or allow you to send a message."
+          },
+          {
+            "question": "Facilities like Electricity/Storage are not showing for some lands.",
+            "answer": "If the land doesn’t have those facilities, they won’t appear. Look for lands where 'Facilities' are mentioned explicitly."
+          },
+          {
+            "question": "I want to post my own land for listing. How can I do that?",
+            "answer": "Go to the “Post Land” section and fill the required details like location, size, price, irrigation, and facilities."
+          },
+          {
+            "question": "Applied filters are not being reset.",
+            "answer": "There should be a “Clear Filters” button (if not, it's recommended to add one). Alternatively, reload the page."
+          },
+          {
+            "question": "Why is the land size shown only in acres?",
+            "answer": "Currently, we support acres as the unit. More units like hectares may be added in future updates."
+          },
+          {
+            "question": "Page looks broken on mobile or is hard to use.",
+            "answer": "Try rotating your phone to landscape mode or zooming out. If the problem continues, please report it to support."
+          }
+        ]
+      },
+    
+      "searchMachine": {
+        "faqData": [
+          {
+            "question": "I selected state and district, but no villages are showing.",
+            "answer": "Ensure you have a stable internet connection. Try re-selecting the state and district or reload the page."
+          },
+          {
+            "question": "I selected purpose and machine, but no results are showing.",
+            "answer": "If no machines match the selected filters, try broadening your filter criteria or change the location."
+          },
+          {
+            "question": "The machine list is not updating after applying filters.",
+            "answer": "Make sure to click the 'Apply Filter' button after selecting your filters. If the issue persists, try clearing the filters and applying again."
+          },
+          {
+            "question": "Why are the same machines showing up multiple times?",
+            "answer": "This might be due to duplicate entries in the database. Please report it via the contact/support form."
+          },
+          {
+            "question": "What is the difference between 'Cost per Acre' and 'Cost per Hour'?",
+            "answer": "'Cost per Acre' is for tasks based on area covered, while 'Cost per Hour' is time-based. Choose what fits your requirement."
+          },
+          {
+            "question": "Can I hire a machine with a tractor?",
+            "answer": "Yes, if the machine is available with a tractor, it will be mentioned in the listing."
+          },
+          {
+            "question": "I clicked on 'Book' but nothing happened.",
+            "answer": "Please make sure you are logged in. Booking machines may require login authentication."
+          },
+          {
+            "question": "How do I contact the machine owner?",
+            "answer": "Click the 'Contact' button next to the machine listing to view contact details or send a message."
+          },
+          {
+            "question": "Some machines don’t show any cost details.",
+            "answer": "If the cost is missing, it may not be updated by the owner. You can still contact them for more information."
+          },
+          {
+            "question": "I want to list my machine for hiring. How can I do that?",
+            "answer": "Go to the 'Post Machine' section and enter machine name, purpose, cost, location, and other details to list your machine."
+          },
+          {
+            "question": "Filters are not resetting after applying.",
+            "answer": "Use the 'Clear Filters' button if available. If not, reloading the page will reset the filters."
+          },
+          {
+            "question": "Page looks broken or doesn’t work properly on mobile.",
+            "answer": "Try refreshing the page or using landscape mode. For persistent issues, report them to the support team."
+          }
+        ]
+      },
+      
+        "searchLabour": {
+          "faqData": [
+            {
+              "question": "I selected state and district, but no villages are appearing.",
+              "answer": "Please check your internet connection. Try reselecting the state and district or refresh the page."
+            },
+            {
+              "question": "No labourers are showing after I apply filters.",
+              "answer": "This may happen if no labourers match your selected filters. Try changing work type, experience, or location to see more results."
+            },
+            {
+              "question": "The labour listings are not updating after applying filters.",
+              "answer": "Ensure you click the 'Apply Filter' button after choosing all options. If the issue continues, clear filters and try again."
+            },
+            {
+              "question": "Why do I see duplicate labour profiles?",
+              "answer": "This could be due to duplicate entries. Please report it using the contact/support form."
+            },
+            {
+              "question": "What is the difference between wage per day and wage per hour?",
+              "answer": "'Wage per day' is for full-day work, while 'wage per hour' is for short-term or part-time work. Choose based on your requirement."
+            },
+            {
+              "question": "Some labourers don’t show wage information.",
+              "answer": "If the wage is not visible, the labourer might not have added it. You can still contact them for details."
+            },
+            {
+              "question": "I clicked on 'Hire' but nothing happened.",
+              "answer": "You may need to log in before hiring. Make sure you're signed in to proceed."
+            },
+            {
+              "question": "How do I contact a labourer?",
+              "answer": "Click the 'Contact' button next to the labour profile. It will show contact info or open a message form."
+            },
+            {
+              "question": "How can I find labourers with specific experience?",
+              "answer": "Enter the minimum years of experience required in the filter before clicking 'Apply Filter'."
+            },
+            {
+              "question": "Filters are not resetting.",
+              "answer": "Use the 'Clear Filters' option if available or reload the page to reset all filters."
+            },
+            {
+              "question": "The page doesn't work properly on mobile.",
+              "answer": "Try rotating your phone or zooming out. If the issue continues, report it to the support team."
+            },
+            {
+              "question": "I want to list myself or someone else as a labourer. How can I do that?",
+              "answer": "Go to the 'Register Labour' section and fill in the required details like name, work type, experience, wage, and location."
+            }
+          ]
+        }
+      }
+    
+  
