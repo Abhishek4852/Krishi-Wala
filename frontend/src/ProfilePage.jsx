@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ProfileUpperNavigationBar from "./ProfileUpperNavigationBar";
-import ProfileSidebar from "./ProfileSideBar";
+
 import SentRequestTable from "./SentRequestTable";
 import ReceivedRequestTable from "./ReceivedRequestTable";
 import PreviewedRequestTable from "./PreviewedRequestTable";

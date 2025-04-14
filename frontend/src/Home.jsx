@@ -26,6 +26,7 @@ function Home()
           With KrishiWala, we’re not just building a platform — we’re building a community. A community that supports farmers, respects labor, and celebrates agriculture.
         </p>
       </div>
+      <FooterPart/>
     </div>
     
     </>
