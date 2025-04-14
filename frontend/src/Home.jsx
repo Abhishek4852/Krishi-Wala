@@ -1,7 +1,7 @@
 import React from "react";
 import Headerpart from "./Headerpart";
 import Mainpart from "./Mainpart";
-import FooterPart from "./Footerpart"; 
+import FooterPart from "./FooterPart"; 
 
 function Home()
 {
