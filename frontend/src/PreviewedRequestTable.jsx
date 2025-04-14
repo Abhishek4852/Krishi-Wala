@@ -9,9 +9,47 @@ const PreviewedRequestTable = () => {
 
  const [requestprice, setrequestprice] = useState("");
  const [preview_desc, setpreview_desc] = useState("");
+ const[pdata,setpdata]=useState("");
 
   const handleFetchRequests = async () => {
     setLoading(true);
+    let data2 ;
+    const validateToken = async () => {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token);
+  
+      if (!token) {
+        alert("No token found");
+        return;
+      }
+  
+      try {
+        const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: token,
+          }),
+        });
+  
+        if (!response.ok) {
+          const error = await response.text();
+          throw new Error(error);
+        }
+  
+         data2 = await response.json();
+        console.log("Mobile from token validation:", data2.mobile);
+        setpdata(data2)
+        // Optional: set the mobile number directly into form
+        
+  
+      } catch (error) {
+        console.error("Token validation failed:", error.message);
+      }
+    
+   
     try {
       const response = await fetch("http://127.0.0.1:8000/recieved_request/", {
         method: "POST",
@@ -19,7 +57,7 @@ const PreviewedRequestTable = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          receiver_mobile: "8103817747", // Replace with dynamic mobile if needed
+          receiver_mobile: data2.mobile, // Replace with dynamic mobile if needed
         }),
       });
 
@@ -31,7 +69,11 @@ const PreviewedRequestTable = () => {
     } finally {
       setLoading(false);
     }
-  };
+  
+};
+  
+validateToken();
+};
 
 //   const handleIgnore = (id) => {
 //     console.log("Ignored Request ID:", id);
@@ -109,6 +151,7 @@ senddata();
           <table className="min-w-full border border-black text-sm">
             <thead className="bg-gray-100">
               <tr>
+                <th className="border border-black px-4 py-2 text-left">Serial no.</th>
                 <th className="border border-black px-4 py-2 text-left">Request ID</th>
                 <th className="border border-black px-4 py-2 text-left">Request Type</th>
                 <th className="border border-black px-4 py-2 text-left">Received Date</th>
@@ -118,8 +161,9 @@ senddata();
               </tr>
             </thead>
             <tbody>
-              {requests.filter(req => req.sender?.status !== "pending").map((req) => (
-                <tr key={req.id} className="hover:bg-gray-50">
+              {requests.filter(req => req.sender?.status !== "pending").map((req,index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="border border-black px-4 py-2">{index+1}</td>
                   <td className="border border-black px-4 py-2">{req.id}</td>
                   <td className="border border-black px-4 py-2">{req.type}</td>
                   <td className="border border-black px-4 py-2">{req.receivedDate}</td>

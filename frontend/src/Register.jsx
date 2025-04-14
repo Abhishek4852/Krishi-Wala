@@ -1,213 +1,184 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import Headerpart from './Headerpart';
 
-
-
 function Register() {
-    const [name , setname]= useState("");
-    const [mobile , setmobile]= useState("");
-    const [email , setemail]= useState("");
-    const [pass , setpass]= useState("");
-    const [cnf_pass , setcnf_pass]= useState("");
-    const navigate = useNavigate();
-function check(){
-//  
-  if(isAllFieldEntered()){
-    if(isAllFieldValid()){
-        const formdata = {
-          fname:name,
-          fmobile:mobile,
-          femail:email,
-          fpass:pass,
-        }
-        console.log(formdata) /// ensuring form data collected properly 
-            // registration data sent to backend django
-            async function senddata(){
-            
-              try{
-              const response =  await fetch("http://127.0.0.1:8000/",
-                {
-                  method:"POST",
-                  headers:{
-                    "Content-Type":"application/json"
-                  },
-                  body:JSON.stringify(formdata)
-                })
-                
-                if(!response.ok){
-                    const error = await response.text();
-                  throw new Error(error);
-                }
-              const data = await response.json();
-               console.log(data);
-               alert("registered successfully")
-               navigate("/Login");
+  const [name, setname] = useState("");
+  const [mobile, setmobile] = useState("");
+  const [email, setemail] = useState("");
+  const [pass, setpass] = useState("");
+  const [cnf_pass, setcnf_pass] = useState("");
+  const navigate = useNavigate();
 
-              }
-              catch(error){
-                if(error.name === "TypeError"){
-                  alert("Network Connection failed")
-                console.log("Network Connection failed ",error.message);
-                }else{ 
-                  alert("Something went wrong")
-                 console.log("other error ",error.message);
-              }}
-              
-                 
-            }
-          
-          senddata();
+  const check = () => {
+    if (!isAllFieldEntered()) {
+      alert("Please enter all details");
+      return;
+    }
+
+    if (!isAllFieldValid()) return;
+
+    const formdata = {
+      fname: name,
+      fmobile: mobile,
+      femail: email,
+      fpass: pass,
+    };
+
+    console.log("Sending data:", formdata);
+
+    const senddata = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8000/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(formdata)
+        });
     
-     
-   
+        if (!response.ok) {
+          const error = await response.json(); // Parse the error JSON response
+          const errorMessage = error?.error?.message || "An error occurred"; // Extract error message
+          throw new Error(errorMessage); // Throw the error with the extracted message
+        }
+    
+        const data = await response.json();
+        console.log("Response:", data);
+        alert(data.message || "Registered successfully");  // Show success message from backend
+        navigate("/Login");
+    
+      } catch (error) {
+        // Alert the error message from the backend
+        alert(error.message);  // Show the error message such as "User already exists with this mobile number."
+        console.error("Error:", error.message);
+      }
+    };
+    senddata();
+  };
 
+  const isAllFieldValid = () => (
+    isAlpha() && isValidMobile() && isValidEmail() && isValidPassword() && matchpass()
+  );
 
-    } 
-  }
-  else {
-    alert("Please enter all details");
-  }
-}   
-
-function isAllFieldValid(){
-  if(isAlpha() && isValidMobile() && isValidEmail() && isValidPassword() && matchpass()){
+  const isAlpha = () => {
+    const regex = /^[A-Za-z]+( [A-Za-z]+){0,3}$/;
+    if (!regex.test(name)) {
+      alert("Please enter a valid name (only alphabets, with at most 3 spaces).");
+      return false;
+    }
     return true;
-  }
-  else{
-   return false;
-  }
-}
+  };
 
-// Function for checking name
-function isAlpha() {
-  if (/^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(name)) {
+  const isValidMobile = () => {
+    if (!/^[6-9]\d{9}$/.test(mobile)) {
+      alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
+      return false;
+    }
     return true;
-  } else {
-    alert("Please enter a valid name (only alphabets, with at most 3 spaces).");
-    return false;
-  }
-}
+  };
 
-// Function for checking mobile number
-function isValidMobile() {
-  if (/^[6-9]\d{9}$/.test(mobile) === true) {
+  const isValidEmail = () => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address.");
+      return false;
+    }
     return true;
-  } else {
-    alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
-    return false;
-  }
-}
+  };
 
-// Function for email validation
-function isValidEmail() {
-  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  if (emailRegex.test(email) === true) {
+  const isValidPassword = () => {
+    if (pass.length < 9 || pass.length > 15) {
+      alert("Password must be 9–15 characters.");
+      return false;
+    }
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)/;
+    if (!passwordRegex.test(pass)) {
+      alert("Password must contain at least one letter and one number.");
+      return false;
+    }
     return true;
-  } else {
-    alert("Please enter a valid email address.");
-    return false;
-  }
-}
+  };
 
-// Function for password validation
-function isValidPassword() {
-  // Check if password length is between 9 and 15
-  if (pass.length < 9 || pass.length > 15) {
-    alert("Password must be greater than 8 and less than 16 characters.");
-    return false;
-  }
-
-  // Check if password contains at least one letter and one number
-  const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+{}\[\]:;<>,.?~\\/-]*$/;
-  if (!passwordRegex.test(pass)) {
-    alert("Please enter a valid password containing at least one letter and one number. Special characters are allowed.");
-    return false;
-  }
-
-  return true;
-}
-
-function matchpass(){
-  if (pass == cnf_pass){
+  const matchpass = () => {
+    if (pass !== cnf_pass) {
+      alert("Passwords do not match.");
+      return false;
+    }
     return true;
-  }
-  else{
-    alert("please enter same password")
-    return false;
-  }
-}
+  };
 
-// for checking isAllfield entered or not
-function isAllFieldEntered(){
-   return ( name !== "" && mobile !== "" && email !== "" && pass !== "" && cnf_pass !== "") 
-}
-
-
+  const isAllFieldEntered = () => name && mobile && email && pass && cnf_pass;
 
   return (
-    <>  
-    <Headerpart/>
-    <div className="m-auto h-full w-400px  flex flex-wrap flex-col border-solid
-     border-black   text-white" >
-
-
-    
-<div className="flex justify-center flex-nowrap text-white *:">    
-
-<img src="/wefwdslogo.png" alt="Krishi Wala Logo" class="w-80 h-20 m-auto flex-shrink-0" />
+    <div>
+    <div className="flex min-h-screen  flex-col md:flex-row h-full">
+        {/* Left Side */}
+        <div className="w-full md:w-1/2 flex items-center justify-center text-white p-10 relative overflow-hidden bg-gradient-to-br from-green-600 to-green-800">
+          <div className="absolute inset-0 clip-arrow bg-gradient-to-br from-green-600 to-green-800 z-0"></div>
+          <div className="text-center z-10">
+            <div className="text-6xl mb-4 drop-shadow-xl">🌾</div>
+            <h1 className="text-4xl font-bold mb-4">Welcome To KrishiWala</h1>
+            <p className="mb-6 text-lg">Already registered? Login to your account.</p>
+            <button
+              onClick={() => navigate("/Login")}
+              className="bg-white text-green-700 px-6 py-2 rounded-md font-semibold hover:bg-green-100 transition"
+            >
+              Login
+            </button>
+          </div>
 </div>
 
-        <br/>
-    <div className=" min-h-3/4  w-96  m-auto flex flex-wrap flex-col  rounded-xl bg-[#2E3944]">
+<div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 p-8">
+  <div className="bg-white p-8 rounded-xl shadow-3xl w-full max-w-md">
+    <div className="flex items-center justify-center mb-6">
+      <div className="text-4xl mr-2 drop-shadow-xl">🌾</div>
+      <h2 className="text-3xl text-green-700 font-bold text-center">Register</h2>
+    </div>
 
-   
-        <div className="text-white m-auto text-4xl font-bold mt-6 "> Register
-        </div>
-        <br/>
-         <div className='ml-6 mr-6'>
-         <span className="text-red-500">*</span>
-            <label for="name" className="text-white" >Enter Full Name</label> <br/>
-            <input type="text" id="name" name="name" class="text-white bg-[#2E3944] border p-2 w-full" onChange={(e)=>{setname(e.target.value)}} required ></input>
-         </div>
-         <br/>
-         <div className='ml-6 mr-6'>
-         <span className="text-red-500">*</span>
-         <label for="mobile" className="text-white">Mobile No.</label> <br/>
-        <input type="text" id="mobile" name="mobile" className="text-white bg-[#2E3944] border p-2 w-full" onChange={(e)=>{setmobile(e.target.value)}}></input>
-         </div>
-         <br/>
-         <div className='ml-6 mr-6'>
-         <span className="text-red-500">*</span>
-            <label for="emain" className="text-white">Enter Email ID</label> <br/>
-            <input type="text" id="email" name="email" className="text-white bg-[#2E3944] border p-2 w-full"onChange={(e)=>{setemail(e.target.value)}}></input>
-         </div>
-         <br/>
-         <div className='ml-6 mr-6'>
-         <span className="text-red-500">*</span>
-         <label for="password" className="text-white">Password</label>   <br/> 
-        <input type="password" id="password" name="password" className="text-white bg-[#2E3944] border p-2 w-full"onChange={(e)=>{setpass(e.target.value)}}></input>
-         </div>
-         <br/>
-         <div className='ml-6 mr-6'>
-         <span className="text-red-500">*</span>
-         <label for="cnf_password" className="text-white">Confirm Password</label> <br/>
-        <input type="password" id="cnf_password" name="cnf_password" className="text-white bg-[#2E3944] border p-2 w-full" onChange={(e)=>{setcnf_pass(e.target.value)}}></input>
-         </div>
-         <br/>
-        <div className='ml-6 mr-6 flex justify-center'>
-        <button type='submit' className="text-white mt-2 w-1/2 mb-6 bg-blue-600 py-2 rounded-md" onClick={check}>Register</button>      
-       </div>
-       
-        <button onClick={()=>{navigate("/Login")}} className= 'bg-[#2e3944] mb-6 text-white px-4 py-2 rounded ' >Already Registered ?</button>
-   
-     
+    <form>
+      <label className="block text-green-700 font-semibold mb-1">Full Name <span className="text-red-500">*</span></label>
+      <input type="text" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-4" onChange={(e) => setname(e.target.value)} required />
+
+      <label className="block  text-green-700  not-last-of-type:font-semibold mb-1">Mobile No. <span className="text-red-500">*</span></label>
+      <input type="text" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-4" onChange={(e) => setmobile(e.target.value)} />
+
+      <label className="block text-green-700 font-semibold mb-1">Email ID <span className="text-red-500">*</span></label>
+      <input type="text" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setemail(e.target.value)} />
+
+      <label className="block text-green-700 font-semibold mb-1">Password <span className="text-red-500">*</span></label>
+      <input type="password" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setpass(e.target.value)} />
+
+      <label className="block text-green-700 font-semibold mb-1">Confirm Password <span className="text-red-500">*</span></label>
+      <input type="password" className="w-full text-green-800  p-3 border border-green-500 rounded-xl mb-6" onChange={(e) => setcnf_pass(e.target.value)} />
+
+      <button
+        type="button"
+        className="w-full bg-green-600 text-white py-3 text-lg rounded-xl font-semibold hover:bg-green-700 transition"
+        onClick={check}
+      >
+        Register
+      </button>
+      <p className="mt-2 text-green-800">
+      Already registered?{" "}s
+      <span
+        onClick={() => navigate("/login")}
+        className="underline cursor-pointer font-semibold"
+      >
+        Login
+      </span>
+    </p>
+
+      
+    </form>
+  </div>
+</div>
+
+
+      </div>
+
     </div>
-    </div>
-    <div className='h-40 w-full'>    </div>
-    </>
-  )
+  );
 }
 
-export default Register
+export default Register;

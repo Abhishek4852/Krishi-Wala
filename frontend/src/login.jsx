@@ -1,134 +1,143 @@
-import React from 'react'
-import { useState } from 'react';
-import { useNavigate } from "react-router-dom";
-import Mediator from './Mediator';
+import React, { useState } from 'react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Headerpart from './Headerpart';
+import { FaGoogle, FaFacebookF, FaGithub, FaLinkedinIn } from 'react-icons/fa';
+import { MdLockOutline, MdPersonOutline } from 'react-icons/md';
 
 function Login() {
-    const [mobile,setmobile] = useState("");
-    const [pass,setpass] = useState("");
-    const navigate = useNavigate();
-    const [token,settoken] = useState();
+  const [mobile, setMobile] = useState("");
+  const [pass, setPass] = useState("");
+  const navigate = useNavigate();
 
-function check(){
-    if(isAllFieldEntered()){
-        if(isAllFieldValid()){
-            const formdata = {
-              fmobile:mobile,
-              fpass:pass,
-            }
-
-              async function senddata(){
-              try {
-                const response = await fetch("http://127.0.0.1:8000/login/",{
-                  method:"POST",
-                  headers:{
-                    'Content-Type':"application/json"
-                  },
-                  body:JSON.stringify(formdata)
-                })
-                if(!response.ok){
-                  const error = await response.text();
-                  throw new Error(error)
-                }
-                const data = await response.json()
-
-                console.log(data)
-                alert(data.message)
-                alert(data.token)
-                settoken(data.token)
-                localStorage.setItem("token",data.token)
-                navigate("/")
-              }
-              catch(e){
-                if(e.name === "TypeError" )
-                  alert("Connection failed")
-                else {
-                  alert("something went wrong")
-                  console.log(e.message)
-                }
-              }
-            }
-senddata();
-         console.log(formdata)
-         
-    
-        } 
-      }
-      else {
-        alert("Please enter all details");
-      }
-}
-function isAllFieldEntered(){
-    return (mobile !== "" && pass !== "") 
- }
- function isAllFieldValid(){
-    return (isValidMobile() && isValidPassword() )  //
-  }
-  function isValidMobile() {
-    if (/^[6-9]\d{9}$/.test(mobile) === true) {
-      return true;
-    } else {
-      alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
-      return false;
-    }
+  function isAllFieldEntered() {
+    return mobile !== "" && pass !== "";
   }
 
-  function isValidPassword() {
-    // Check if password length is between 9 and 15
-    if (pass.length < 9 || pass.length > 15) {
-      alert("Wrong Password");
-      return false;
-    }
-  
-    // Check if password contains at least one letter and one number
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&()_+{}\[\]:;<>,.?~\\/-]{9,15}$/;
-    
-    if (!passwordRegex.test(pass)) {
-      alert("Wrong Password");
-      return false;
-    }
-  
+  function isAllFieldValid() {
     return true;
   }
+
+  async function check() {
+    if (isAllFieldEntered()) {
+      if (isAllFieldValid()) {
+        const formdata = {
+          fmobile: mobile,
+          fpass: pass,
+        };
+
+        try {
+          const response = await fetch("http://127.0.0.1:8000/login/", {
+            method: "POST",
+            headers: {
+              'Content-Type': "application/json"
+            },
+            body: JSON.stringify(formdata)
+          });
+
+          if (!response.ok) {
+            const error = await response.text();
+            throw new Error(error);
+          }
+
+          const data = await response.json();
+          alert(data.message);
+          localStorage.setItem("token", data.token);
+          navigate("/");
+        } catch (e) {
+          alert(e.name === "TypeError" ? "Connection failed" : "Something went wrong");
+          console.error(e);
+        }
+      }
+    } else {
+      alert("Please enter all details");
+    }
+  }
+
+  //.........................
+  useEffect(() => {
+    const inputs = document.querySelectorAll('input');
+
+    inputs.forEach((input) => {
+      setTimeout(() => {
+        input.style.backgroundColor = 'white';
+        input.style.color = 'black';
+        input.style.boxShadow = '0 0 0 1000px white inset';
+        input.style.webkitTextFillColor = 'black';
+      }, 100);
+    });
+  }, []);
   
 
   return (
-    <>  
-    <Headerpart/>
-    <div className='h-10 w-full'>    </div>
-    <div className='min-h-0 w-96  mt-50 flex flex-col flex-wrap m-auto bg-[#2E3944]  rounded-xl'>
-      <h1 className='self-center text-3xl mt-10 text-white font-bold' >Login</h1>  
+    <>
+     
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200   text-green-700  px-4   ">
+        <form className="w-full max-w-4xl bg-white rounded-3xl flex flex-col md:flex-row overflow-hidden shadow-2xl">
+          {/* Left Section */}
+          <div className="w-full md:w-1/2 border-green-700 border-4 bg-green-700 text-white flex flex-col items-center justify-center p-8 md:p-10 text-center ">
+  <h2 className="text-3xl md:text-4xl font-bold mb-2 flex items-center justify-center gap-2">
+    <span className="text-4xl">🌾</span> KrishiWala
+  </h2>
+</div>
 
-        <div className='m-auto text-white mt-8'>
-        <span className="text-red-500">*</span>
-         <label htmlFor="mobile" className='text-white'> Enter Mobile No.</label>
-         <input type="number" className='text-white bg-[#2E3944] border p-2 w-full ' onChange={(e)=>{setmobile(e.target.value)}} />
-        </div>
-        <br/>
-        <div className='m-auto text-black'>
-        <span className="text-red-500">*</span>
-         <label htmlFor="mobile" className='text-white'> Enter password.</label>
-         <input type="text" className='text-white bg-[#2E3944] border p-2 w-full ' onChange={(e)=>{setpass(e.target.value)}} />
-        </div>
-        <br/>
-        <br/>
-        <div className='m-auto'>
-        <button className='text-white mt-2 w-24 mb-6 m-auto bg-blue-600 py-2 rounded-md' onClick={check}> Login </button>
-        </div>
-        <div className='ml-6 mr-6 mb-4 bg-[#2E3944]'>
-        <button onClick={()=>{navigate("/")}} className= 'bg-[#2E3944] text-white px-4 py-2 rounded' >Create Account ? </button>
-       </div>
-      
-    </div>
-    <div className='h-96 w-full'>    </div>
-    
 
-   
+          {/* Right Section */}
+          <div className="w-full md:w-1/2   border-green-700 border-0 p-8 md:p-10">
+
+            <h1 className="text-2xl md:text-3xl font-bold text-center  mb-6 ">Login</h1>
+            
+<h1 className= "text-left ml-5 font-bold">  User Name </h1>
+            <div className="relative mb-4 border-2 rounded-3xl  border-green-700">
+            
+            <MdPersonOutline className="absolute right-4 top-3.5 text-xl" />
+            <input
+  type="number"
+  placeholder="Enter your mobile number "
+  value={mobile}
+  onChange={(e) => setMobile(e.target.value)}
+  className="w-full py-3  autofill:bg-white text-center rounded-full px-5 pr-14  text-base appearance-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+/>
+
+              
+            </div>
+            <h1 className= "text-left ml-5 font-bold">  Password </h1>
+            <div className="relative mb-4 border-2 rounded-full  border-green-700">
+          
+            <input
+  type="password"
+  placeholder="Password"
+  value={pass}
+  onChange={(e) => setPass(e.target.value)}
+  className="w-full bg-red-100 autofill:bg-white
+py-3 text-center rounded-full px-5 pr-14  text-base  text-black"
+/>
+
+              <MdLockOutline className="absolute right-4 top-3.5  text-xl" />
+            </div>
+          
+            <button
+              type="button"
+              onClick={check}
+              className="bg-green-700 hover:bg-green-800 transition duration-300 w-full h-12 text-white rounded-full  font-bold  mb-4"
+            >
+              Login
+            </button>
+           
+            <p className="text-sm text-center mb-4 text-gray-800 ">
+  Don't have an account?{' '}
+  <span
+    onClick={() => navigate("/register")}
+    className="font-semibold  text-green-800 font-boldunderline cursor-pointer"
+  >
+    Register
+  </span>
+</p>    
+          </div>
+        </form>
+      </div>
     </>
-    
-    
-  )
+  );
 }
 
-export default Login
+export default Login;

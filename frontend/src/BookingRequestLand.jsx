@@ -85,7 +85,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#2E3944] p-6 rounded-lg shadow-lg w-96">
+        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-100 text-black border-green-600 border-2 shadow-lg p-6 rounded-lg w-96">
 
             {/* ❌ Close Button */}
           <Dialog.Close asChild>
@@ -101,7 +101,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
             <label className="block">Enter Your Name</label>
             <input
               type="text"
-              className="w-full border p-2 rounded"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
@@ -109,7 +109,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
             <label className="block mt-2">Enter Mobile No</label>
             <input
               type="number"
-              className="w-full border p-2 rounded"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
             />
@@ -117,7 +117,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
             <label className="block mt-2">Enter Land Size (acres)</label>
             <input
               type="number"
-              className="w-full border p-2 rounded"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
               value={landSize}
               onChange={(e) => setLandSize(e.target.value)}
             />
@@ -126,13 +126,13 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
             <div className="flex space-x-2">
               <input
                 type="date"
-                className="border p-2 rounded w-1/2"
+                className="bg-gray-400 text-black rounded-xl p-2 border-gray-800 border-2 w-full"
                 value={rentingPeriod.start}
                 onChange={(e) => setRentingPeriod({ ...rentingPeriod, start: e.target.value })}
               />
               <input
                 type="date"
-                className="border p-2 rounded w-1/2"
+                className="bg-gray-400 text-black rounded-xl p-2 border-gray-800 border-2 w-full"
                 value={rentingPeriod.end}
                 onChange={(e) => setRentingPeriod({ ...rentingPeriod, end: e.target.value })}
               />
@@ -140,7 +140,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
 
             <label className="block mt-2">Description (Optional)</label>
             <textarea
-              className="w-full border p-2 rounded"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
@@ -148,7 +148,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
               <Dialog.Close asChild>
                 <button className="px-4 py-2 bg-gray-400 text-white rounded">Cancel</button>
               </Dialog.Close>
-              <button onClick={handleSubmit} className="px-4 py-2 bg-green-600 text-white rounded">
+              <button onClick={handleSubmit} className="bg-green-700 text-white px-6 py-2 rounded-xl hover:bg-green-800 transition duration-200">
                 Send Request
               </button>
             </div>

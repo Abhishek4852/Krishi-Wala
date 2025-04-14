@@ -1,30 +1,54 @@
-function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccountNo, IFSC, setIFSC}) {
+import { useState } from "react";
+
+function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccountNo, IFSC, setIFSC,className="",placeholder=""}) {
+  const [showFields, setShowFields] = useState(false);
   return (
-    <div className="flex flex-col text-base">
-      <div className=" mt-10">
-        <label>Enter Bank Details</label>
-      </div>
+    <div className={`flex flex-col text-base ${className}`}>
+    <button
+      type="button"
+      onClick={() => setShowFields(!showFields)}
+      className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition w-fit"
+    >
+      {showFields ? "Hide Bank Details" : "Add Bank Details"}
+    </button>
 
-      <div className=" mt-2">
-        <label>Account Holder Name</label>
-        <input type="text" className="bg-[#2E3944] border p-2 w-full" onChange={(e) => setName(e.target.value)} value={name} />
-      </div>
+    {showFields && (
+      <div className="mt-4 space-y-5">
+        <input
+          type="text"
+          className={placeholder}
+          onChange={(e) => setName(e.target.value)}
+          value={name}
+          placeholder="Enter Account Holder Name"
+        />
 
-      <div className=" mt-5">
-        <label>Bank Name</label>
-        <input type="text" className="bg-[#2E3944] border p-2 w-full" onChange={(e) => setBankName(e.target.value)} value={bankName} />
-      </div>
+        <input
+          type="text"
+          className={placeholder}
+          onChange={(e) => setBankName(e.target.value)}
+          value={bankName}
+          placeholder="Enter Bank Name"
+        />
 
-      <div className=" mt-5">
-        <label>Account No.</label>
-        <input type="number" className="bg-[#2E3944] border p-2 w-full" onChange={(e) => setAccountNo(e.target.value)} value={accountNo} />
-      </div>
+        <input
+          type="number"
+          className={placeholder}
+          onChange={(e) => setAccountNo(e.target.value)}
+          value={accountNo}
+          placeholder="Enter Account No."
+        />
 
-      <div className=" mt-5">
-        <label>IFSC Code</label>
-        <input type="text" className="bg-[#2E3944]  border p-2 w-full" onChange={(e) => setIFSC(e.target.value)} value={IFSC} />
+        <input
+          type="text"
+          className={placeholder}
+          onChange={(e) => setIFSC(e.target.value)}
+          value={IFSC}
+          placeholder="Enter IFSC Code"
+        />
       </div>
-    </div>
+    )}
+  </div>
+
   );
 }
 

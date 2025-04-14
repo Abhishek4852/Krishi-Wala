@@ -75,12 +75,16 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
       setOpen(false); // Close modal
     }
   };
+  const inputClass =
+  "text-black flex flex-col text-base";
+  const placeholder = "bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full";
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-[#2E3944] p-6 rounded-lg shadow-lg w-96">
+        <Dialog.Overlay className="fixed inset-0 bg-black opacity-30 " />
+        <Dialog.Content className="fixed top-5/9 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-100 text-black border-green-600 border-2 shadow-lg p-6 rounded-lg w-96">
+
           <Dialog.Close asChild>
             <button
               className="absolute top-3 right-3 text-white text-2xl font-bold hover:text-red-500"
@@ -100,7 +104,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               placeholder="Enter Your Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full border rounded p-2"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
             <input
@@ -108,15 +112,15 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               placeholder="Enter Mobile Number"
               value={mobile}
               onChange={(e) => setMobile(e.target.value)}
-              className="w-full border rounded p-2"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
             <div>
-              <label className="block text-white mt-2">Renting Period</label>
+              <label className="block text-black mt-2">Renting Period</label>
               <div className="flex space-x-2">
                 <input
                   type="date"
-                  className="border p-2 rounded w-1/2"
+                  className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
                   value={rentingPeriod.start}
                   onChange={(e) =>
                     setRentingPeriod({ ...rentingPeriod, start: e.target.value })
@@ -124,7 +128,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
                 />
                 <input
                   type="date"
-                  className="border p-2 rounded w-1/2"
+                  className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
                   value={rentingPeriod.end}
                   onChange={(e) =>
                     setRentingPeriod({ ...rentingPeriod, end: e.target.value })
@@ -137,24 +141,25 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               placeholder="How Time require in Hour ?"
               value={hour}
               onChange={(e) => sethour(e.target.value)}
-              className="w-full border rounded p-2"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
             <SelectAddress
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
-              selectedDistrict={selectedDistrict}
-              setSelectedDistrict={setSelectedDistrict}
-              selectedVillage={selectedVillage}
-              setSelectedVillage={setSelectedVillage}
-              className="space-x-2"
-            />
+            selectedState={selectedState}
+            selectedDistrict={selectedDistrict}
+            selectedVillage={selectedVillage}
+            setSelectedState={setSelectedState}
+            setSelectedDistrict={setSelectedDistrict}
+            setSelectedVillage={setSelectedVillage}
+            className={inputClass}
+            placeholder={placeholder}
+          />
 
             <textarea
               placeholder="Enter Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full border rounded p-2 h-24"
+              className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
             <div className="flex justify-end gap-2 pt-4">
@@ -163,7 +168,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               </Dialog.Close>
               <button
                 onClick={handleSubmit}
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="bg-green-700 text-white px-6 py-2 rounded-xl hover:bg-green-800 transition duration-200"
               >
                 Send Request
               </button>

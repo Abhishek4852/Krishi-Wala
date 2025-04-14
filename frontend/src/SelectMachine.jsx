@@ -3,7 +3,7 @@ import machine_data from "./machine_data.json";
 import SelectTractor from "./SelectTractor";
 
 function SelectMachine({ purpose, setPurpose, 
-  machineName, setMachineName }) {
+  machineName, setMachineName, className="",placeholder="" }) {
     const [machineList, 
       setMachineList] = useState([]);  
     
@@ -18,20 +18,22 @@ function SelectMachine({ purpose, setPurpose,
     };
   
     return (
-      <div className="text-white">
-        <label className="block mt-4 ">Purpose of Machine:</label>
-        <select onChange={handlePurposeChange} value={purpose} className="border p-2 w-full bg-[#2E3944] text-white">
+      <>
+      <div className={` ${className} `}>
+        <label className="font-semibold block mb-1">Select Purpose of Machine:</label>
+        <select onChange={handlePurposeChange} value={purpose} className={placeholder} >
           <option value="">Select Purpose</option>
           {Object.keys(machine_data).map((purposeName, index) => (
             <option key={index} value={purposeName}>{purposeName}</option>
           ))}
         </select>
-  
+        </div>
+        <div className={` ${className} `}>
         <label className="block mt-4">Machine Name:</label>
         <select 
           onChange={(e) => setMachineName(e.target.value)} 
           value={machineName||""} 
-          className="border p-2 w-full bg-[#2E3944] text-white " 
+          className={placeholder}
           disabled={!purpose} // Disable machine selection if no purpose is selected
         >
           <option value="">Select Machine</option>
@@ -42,7 +44,8 @@ function SelectMachine({ purpose, setPurpose,
           ))
         ) : null}
         </select>
-      </div>
+       </div>
+       </>
     );
   }
   

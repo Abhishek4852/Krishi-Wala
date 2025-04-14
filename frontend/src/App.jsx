@@ -19,6 +19,8 @@ import SearchLabour from "./SearchLabour";
 import ReceivedRequestTable from "./ReceivedRequestTable";
 import SentRequestTable from "./SentRequestTable";
 import ProfilePage from "./ProfilePage";
+import ChatSupport from "./ChatSupport";
+import SearchNavBar from "./SearchNavBar";
 
 
 
@@ -35,7 +37,7 @@ function App() {
       <Route path="/Headerpart" element= {<Headerpart />} />
       <Route path="/Sidebar" element= {<Sidebar />} />
       <Route path="/TakeLandOnRent" element= {<TakeLandOnRent />} />
-     
+      <Route path="/SearchNavBar" element= {<SearchNavBar />} />
      
       <Route path="/TakeLandOnRentHeader" element= {<TakeLandOnRentHeader />} />
       <Route path="/LabourRegistration" element= {<LabourRegistration />} />
@@ -45,6 +47,7 @@ function App() {
       <Route path="/ReceivedRequestTable" element= {<ReceivedRequestTable />} />
       <Route path="/SentRequestTable" element= {<SentRequestTable />} />
       <Route path="/ProfilePage" element= {<ProfilePage />} />
+      <Route path="/ChatSupport" element= {<ChatSupport />} />
      
     </Routes>
   );

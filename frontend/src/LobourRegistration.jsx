@@ -1,11 +1,55 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import Headerpart from "./Headerpart";
 import SelectAddress from "./SelectAddress";
 import BankDetails from "./BankDetails";
+import ChatSupport from "./ChatSupport";
 
 function LabourRegistration() {
   const navigate =useNavigate();
+
+  const [userName, setUserName]=useState("")
+  const [UserNumber, setUserNumber] = useState("")
+  
+    useEffect(() => {
+      const verifyToken = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in first.");
+          navigate("/login");
+          return;
+        }
+  
+        try {
+          const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+          });
+  
+          const data = await response.json();
+          console.log(data)
+          if (response.ok) {
+            setUserName(data.name); // Set name from response
+            setUserNumber(data.mobile); // Set number from response
+          } else {
+            alert(data.error || "Invalid token. Please log in again.");
+            localStorage.removeItem("token");
+            navigate("/login");
+          }
+        } catch (error) {
+          console.error("Token validation error:", error);
+          alert("Something went wrong. Try logging in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      };
+  
+      verifyToken();
+    }, [navigate]);
+  
 
   // BankDetails 
   const [bname, setbName] = useState("");
@@ -76,6 +120,8 @@ function LabourRegistration() {
             formData.append("bAccountNo", bAccountNo);
             formData.append("IFSC", IFSC);
         
+
+            console.log(formData)
             // Append the profile image (Ensure formData1 contains the file object)
             if (formData1.avatar) {
               formData.append("avatar", formData1.avatar);
@@ -186,12 +232,12 @@ function isPrice() {
     return false;
   }
 }
-const handleAvatarChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-      setFormData1((prevData) => ({ ...prevData, avatar: file }));
-  }
-};
+// const handleAvatarChange = (e) => {
+//   const file = e.target.files[0];
+//   if (file) {
+//       setFormData1((prevData) => ({ ...prevData, avatar: file }));
+//   }
+// };
 
 
 
@@ -213,158 +259,178 @@ else{
   return false
 }
 }
+
+const inputClass =
+    "text-black flex flex-col text-base";
+    const placeholder = "bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full";
   return (
     <>
-    <Headerpart/>
-    
-    <div className="p-6 bg-[#2E3944] border-gray-400 mt-10 rounded-xl max-w-md mx-auto border border- shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">Labour Registration Form</h2>
-      <div className="text-center mb-4">
-                    
-                    <div className="w-24 h-24 mx-auto rounded-full border overflow-hidden flex items-center justify-center bg-gray-700 ">
-                        {formData1.avatar ? <img src={formData1.avatar} alt="Avatar" className="w-full h-full object-cover" /> : <span className="text-gray-400">No Image</span>}
-                    </div>
-                    <label htmlFor="avatar-upload" className="block text-white mb-2">profile picture</label>
-                    <input type="file" id="avatar-upload" accept="image/*" onChange={handleAvatarChange} className="mt-2 text-white" />
-                </div>
-      <label className="block mt-4">Name:</label>
-      <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="border p-2 w-full" />
+    <Headerpart />
+    <ChatSupport/>
+    <div className="max-w-6xl mx-auto p-4">
+      <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
+        <h2 className="text-3xl font-bold mb-6 text-center text-green-900 dark:text-green-700">
+          Labour Registration Form
+        </h2>
 
-      <label className="block mt-4">Mobile Number:</label>
-      <input type="tel" value={mobile} onChange={(e) => setMobile(e.target.value)} className="border p-2 w-full" />
-
-      <label className="block mt-4 text-white">Age:</label>
-    <input
-      type="number"
-      value={age}
-      onChange={(e) => {
-        setAge(e.target.value)
-      //  const newAge = e.target.value;
-    //   setAge(newAge); 
-    // Validate age while updating
-      }}
-      className="border p-2 w-full text-white bg-[#2E3944]"
-    />
-     
-     <div>
-
-<label className="block mt-4">Gender:</label>
-
-<div className="flex gap-4">
-    <label className="flex items-center">
-        <input 
-            type="radio" 
-            value="Male" 
-            checked={gender === "Male"} 
-            onChange={(e) => setGender(e.target.value)} 
-            className="mr-2"
-        />
-        Male
-    </label>
-
-    <label className="flex items-center">
-        <input 
-            type="radio" 
-            value="Female" 
-            checked={gender === "Female"} 
-            onChange={(e) => setGender(e.target.value)} 
-            className="mr-2"
-        />
-        Female
-    </label>
-</div>
-</div>
-
-      <div className=" mt-5 ">
-            
-    <span className="">Select Location :</span>
-        
-        
-            <SelectAddress
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
-              selectedDistrict={selectedDistrict}
-              setSelectedDistrict={setSelectedDistrict}
-              selectedVillage={selectedVillage}
-              setSelectedVillage={setSelectedVillage}
-              className="text-white"
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col">
+            <label className="font-semibold">Name</label>
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter Name"
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
             />
-           
           </div>
 
+          <div className="flex flex-col">
+            <label className="font-semibold">Mobile Number</label>
+            <input
+              type="text"
+              value={UserNumber}
+              onChange={(e) => setMobile(e.target.value)}
+              placeholder="Enter Mobile Number"
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            />
+          </div>
 
-      <label className="block mt-4 bg-[#2E3944]  border-gray-400">Select Work:</label>
-      <select value={workType} onChange={handleWorkChange} className="border p-2 w-full bg-[#2E3944]  border-gray-400">
-        <option value="">-- Select Work --</option>
-        <option value="Ploughing">Ploughing</option>
-        <option value="Sowing">Sowing</option>
-        <option value="Weeding">Weeding</option>
-        <option value="Harvesting">Harvesting</option>
-        <option value="Irrigation">Irrigation</option>
-        <option value="Threshing">Threshing</option>
-        <option value="Fertilizer Spraying">Fertilizer Spraying</option>
-        <option value="Pesticide Spraying">Pesticide Spraying</option>
-        <option value="Crop Transportation">Crop Transportation</option>
-        <option value="Cattle Rearing">Cattle Rearing</option>
-        <option value="Seed Treatment">Seed Treatment</option>
-        <option value="Land Leveling">Land Leveling</option>
-        <option value="Drip Irrigation Setup">Drip Irrigation Setup</option>
-        <option value="Organic Farming">Organic Farming</option>
-        <option value="Vermicomposting">Vermicomposting</option>
-        <option value="Other">Other</option>
-      </select>
+          <div className="flex flex-col">
+            <label className="font-semibold">Work Type</label>
+            <select
+              value={workType}
+              onChange={handleWorkChange}
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            >
+              <option>Select Work Type</option>
+              <option>Electrician</option>
+              <option>Plumber</option>
+              <option>Painter</option>
+              <option>Labour</option>
+              <option>Other</option>
+            </select>
+          </div>
 
-      {workType === "Other" && (
-        <div className="mt-4">
-          <label className="block">Specify Other Work:</label>
-          <input
-            type="text"
-            value={otherWork}
-            onChange={handleOtherWorkChange}
-            className="border p-2 w-full"
-            placeholder="Enter work name"
+          {workType === "Other" && (
+            <div className="flex flex-col">
+              <label className="font-semibold">Other Work</label>
+              <input
+                type="text"
+                value={otherWork}
+                onChange={handleOtherWorkChange}
+                placeholder="Specify other work"
+                className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+              />
+            </div>
+          )}
+
+          <div className="flex flex-col">
+            <label className="font-semibold">Price</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Enter Price"
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-semibold">Price Type</label>
+            <select
+              value={priceType}
+              onChange={(e) => setPriceType(e.target.value)}
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            >
+              <option>Per Day</option>
+              <option>Per Hour</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-semibold">Age</label>
+            <input
+              type="number"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              placeholder="Enter Age"
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-semibold">Gender</label>
+            <select
+              value={gender}
+              onChange={(e) => setGender(e.target.value)}
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            >
+              <option>Select Gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-semibold">Experience (in years)</label>
+            <input
+              type="number"
+              value={experience}
+              onChange={(e) => setexperience(e.target.value)}
+              placeholder="Enter Experience"
+              className="bg-white p-2 border-2 border-gray-800 rounded-xl"
+            />
+          </div>
+
+          <div className="flex flex-col">
+            <label className="font-semibold">Upload Profile Photo</label>
+            <input
+              type="file"
+              onChange={(e) => setFormData1({ avatar: e.target.files[0] })}
+              className="bg-white text-black p-2 rounded-xl border-gray-800 border-2"
+            />
+          </div>
+
+          {/* Location Component */}
+          <SelectAddress
+            selectedState={selectedState}
+            selectedDistrict={selectedDistrict}
+            selectedVillage={selectedVillage}
+            setSelectedState={setSelectedState}
+            setSelectedDistrict={setSelectedDistrict}
+            setSelectedVillage={setSelectedVillage}
+            className={inputClass}
+            placeholder={placeholder}
           />
+
+          {/* Bank Details */}
+          <BankDetails
+              name={bname}
+              setName={setbName}
+              bankName={bankName}
+              setBankName={setBankName}
+              accountNo={bAccountNo}
+              setAccountNo={setbAccountNo}
+              IFSC={IFSC}
+              setIFSC={setIFSC}
+              className={inputClass}
+              placeholder={placeholder}
+            />
         </div>
-      )}
-       <label className="block mt-4">How Much Experience(in year) Do you Have ? </label>
-      <input type="number" value={experience} onChange={(e) => setexperience(e.target.value)} className="border p-2 w-full" />
 
-      <label className="block mt-4">Enter your wage and select the payment duration.</label>
-      <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="border p-2 w-full" />
-
-      <div className="flex gap-4 mt-2">
-        <button className={`p-2 w-1/2 ${priceType === "Per Day" ? "bg-blue-500 text-white" : "bg-gray-600"}`} onClick={() => setPriceType("Per Day")}>
-          Per Day
-        </button>
-        <button className={`p-2 w-1/2 ${priceType === "Per Hour" ? "bg-blue-500 text-white" : "bg-gray-600"}`} onClick={() => setPriceType("Per Hour")}>
-          Per Hour
-        </button>
+        <div className="text-center mt-6">
+          <button
+            className="bg-green-700 text-white px-6 py-2 rounded-xl hover:bg-green-800 transition duration-200"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
       </div>
-
-      {/* <label className="block mt-4">Account Information:</label>
-      <input type="text" value={accountInfo} onChange={(e) => setAccountInfo(e.target.value)} className="border p-2 w-full" /> */}
-
-      < BankDetails 
-       name={bname} setName={setbName} 
-       bankName={bankName} setBankName={setBankName} 
-       accountNo={bAccountNo} setAccountNo={setbAccountNo} 
-       IFSC={IFSC} setIFSC={setIFSC} 
-      />
-        
-
-
-        <div className="mt-6 flex justify-center">
-      <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md" onClick={handleSubmit}>
-        Save Details
-      </button>
     </div>
-
-
-
-      
-    </div>
-    <div className='h-10 w-full'>    </div>
-    </>
+  </>
   );
 }
 

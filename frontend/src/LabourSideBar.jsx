@@ -71,6 +71,9 @@ async function senddata(){
        console.log("other error ",error.message);
     }}
   }
+  const inputClass =
+  "text-white flex flex-col text-base";
+  const placeholder = "bg-white text-black rounded-xl border-gray-800 border-2 w-full";
 
 
   return (
@@ -80,14 +83,14 @@ async function senddata(){
 
       {/* Sidebar */}
       <div
-        className={`fixed top-16 left-0 w-72 min-h-full bg-gray-800 text-white p-4 transition-transform border-t border-white z-30
+        className={`fixed top-16 left-0 w-72 min-h-full bg-green-700 text-white p-4 transition-transform border-t border-white z-30
           ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
       >
         <button
           onClick={() => setIsOpen(false)}
           className="absolute top-2 right-2 text-white"
         >
-          <X size={24} />
+          <X size={24} className="mt-3"/>
         </button>
 
         <h2 className="text-lg font-bold">Apply Filters</h2>
@@ -101,17 +104,18 @@ async function senddata(){
             setSelectedDistrict={(value) => handleLocationChange("selectedDistrict", value)}
             selectedVillage={filters.selectedVillage}
             setSelectedVillage={(value) => handleLocationChange("selectedVillage", value)}
-            className="bg-[#2E3944] text-white"
+            className={inputClass}
+            placeholder={placeholder}
           />
         </div>
 
         <div className="mt-4">
-          <label className="block">Work Type</label>
+          <label className="text-white">Work Type</label>
           <select
             name="workType"
             value={filters.workType}
             onChange={handleFilterChange}
-            className="w-full p-1 rounded border border-gray-300 bg-gray-700 text-white"
+            className="bg-white text-black rounded-xl border-gray-800 border-2 w-full"
           >
             <option value="">Select Work Type</option>
             <option value="Ploughing">Ploughing</option>
@@ -141,20 +145,20 @@ async function senddata(){
               name="otherWork"
               value={filters.otherWork}
               onChange={handleFilterChange}
-              className="border p-2 w-full bg-gray-700 text-white"
+              className="bg-white text-black rounded-xl border-gray-800 border-2 w-full"
               placeholder="Enter work name"
             />
           </div>
         )}
 
         <div className="mt-4">
-          <label className="block"> Enter Minimum Experience Require :</label>
+          <label className="text-white"> Enter Minimum Experience</label>
           <input
-            type="number"
+            type="text"
             name="minimumExp"
             value={filters.minimumExp}
             onChange={handleFilterChange}
-            className="w-full p-1 rounded border border-gray-300 bg-gray-700 text-white"
+            className="bg-white text-black rounded-xl border-gray-800 border-2 w-full "
           />
             
           
@@ -168,7 +172,7 @@ async function senddata(){
             name="wagePerDay"
             value={filters.wagePerDay}
             onChange={handleFilterChange}
-            className="w-full p-1 rounded border border-gray-300 bg-gray-700 text-white"
+            className="bg-white text-black rounded-xl border-gray-800 border-2 w-full"
           />
         </div>
 
@@ -179,13 +183,13 @@ async function senddata(){
             name="wagePerHour"
             value={filters.wagePerHour}
             onChange={handleFilterChange}
-            className="w-full p-1 rounded border border-gray-300 bg-gray-700 text-white"
+            className="bg-white text-black rounded-xl border-gray-800 border-2 w-full"
           />
         </div>
 
         <button
           onClick={applyFilters}
-          className="mt-4 w-full p-2 bg-blue-600 text-white rounded"
+          className="mt-4 w-full p-2 bg-green-950 text-white rounded"
         >
           Apply Filter
         </button>

@@ -1,12 +1,20 @@
 import { Home, MessageSquare, LogOut } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
+
   return (
     <>
       {/* Overlay for Mobile */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="fixed inset-0 bg-black bg-opacity-40 z-40"
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}
@@ -15,10 +23,10 @@ function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
       <div
         className={`${
           isMobile
-            ? `fixed top-0 left-0 h-full w-64 bg-gray-900 text-white mt-10 p-6 shadow-lg transform transition-transform duration-300 z-50 ${
+            ? `fixed top-2 left-0 h-full w-64 bg-green-800 text-white mt-12 p-6 shadow-lg transform transition-transform duration-300 z-50 ${
                 sidebarOpen ? "translate-x-0" : "-translate-x-full"
               }`
-            : `fixed left-0 h-full w-64 bg-gray-900 text-white p-6 shadow-lg z-40 mt-14 ${
+            : `fixed left-0 h-full w-64 bg-green-800 text-white p-6 shadow-lg z-40 mt-14 ${
                 sidebarOpen ? "" : "hidden"
               }`
         }`}
@@ -34,36 +42,36 @@ function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
         )}
 
         {/* Profile Section */}
-        <div className="flex flex-col items-center gap-3 mt-8 border-b border-gray-600 pb-4">
+        <div className="flex flex-col items-center gap-3 mt-8 border-b border-green-600 pb-4">
           <img
-            src={user?.image || "default-avatar.jpg"}
+            src={"profilephoto.png"}
             alt="User Avatar"
             className="w-16 h-16 rounded-full border-2 border-white object-cover"
           />
-          <span className="text-lg font-semibold">
+          <span className="text-lg font-bold">
             {user?.name || "Guest User"}
           </span>
         </div>
 
         {/* Navigation */}
-        <div className="mt-6 flex flex-col gap-6">
-          <a href="#" className="flex items-center gap-3 hover:text-gray-300">
+        <div className="mt-6 flex flex-col gap-6 font-medium">
+          <a href="#" className="flex items-center gap-3 hover:text-yellow-300 transition">
             <Home size={24} />
             <span>Home</span>
           </a>
 
-          <a href="#" className="flex items-center gap-3 hover:text-gray-300">
+          <a href="#" className="flex items-center gap-3 hover:text-yellow-300 transition">
             <MessageSquare size={24} />
             <span>Chat Support</span>
           </a>
 
-          <a
-            href="#"
-            className="flex items-center gap-3 text-red-500 hover:text-red-400"
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 text-red-400 hover:text-red-300 transition"
           >
             <LogOut size={24} />
             <span>Logout</span>
-          </a>
+          </button>
         </div>
       </div>
     </>

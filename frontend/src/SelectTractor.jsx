@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import tractor_data from "./tractor_data.json"
 
-function SelectTractor({ brand, setBrand, tractorModel, setTractorModel }) {
+function SelectTractor({ brand, setBrand, tractorModel, setTractorModel ,className="",placeholder=""}) {
   const [tractorList, setTractorList] = useState([]);
 
   // Handle Brand Selection
@@ -13,24 +13,27 @@ function SelectTractor({ brand, setBrand, tractorModel, setTractorModel }) {
   };
 
   return (
-    <div className="text-white">
+    <>
+    
+        <div className={` ${className} `}>
       
       <select 
         onChange={handleBrandChange} 
         value={brand} 
-        className="border p-2 w-full bg-[#2E3944] text-white"
+        className={placeholder}
       >
         <option value="">Select Brand</option>
         {Object.keys(tractor_data).map((brandName, index) => (
           <option key={index} value={brandName}>{brandName}</option>
         ))}
       </select>
-
+      </div>
+      <div className={` ${className} `}>
       <label className="block mt-4">Tractor Model:</label>
       <select 
         onChange={(e) => setTractorModel(e.target.value)} 
         value={tractorModel || ""} 
-        className="border p-2 w-full bg-[#2E3944] text-white" 
+        className={placeholder}
         disabled={!brand} // Disable model selection if no brand is selected
       >
         <option value="">Select Model</option>
@@ -38,7 +41,9 @@ function SelectTractor({ brand, setBrand, tractorModel, setTractorModel }) {
           <option key={index} value={model}>{model}</option>
         ))}
       </select>
-    </div>
+      </div>
+   
+    </>
   );
 }
 

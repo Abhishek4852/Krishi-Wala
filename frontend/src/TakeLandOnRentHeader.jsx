@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import SelectAddress from "./SelectAddress";
-
+import ProfileUpperNavigationBar from "./ProfileUpperNavigationBar";
+import ChatSupport from "./ChatSupport";
+import SearchUpperNav from "./SearchUpperNav";
+import SearchMachineNavigationBar from "./SearchMachineNavigationBar";
+import NavigationBar from "./NavigationBar";
 export default function TakeLandOnRentHeader({
   selectedState,
   setSelectedState,
@@ -39,31 +43,35 @@ export default function TakeLandOnRentHeader({
   }, [isMobile]);
 
   const  applyFilters = () => {
-    const filters = {
-      selectedState,
-      selectedDistrict,
-      selectedVillage,
-      size,
-      pricePerAcre,
-      period,
-      irrigationSource,
-    };
+    
 
-    setfilteredData(filters);
+    // setfilteredData(filters);
 
 
     // console.log("Applied Filters:", filters);
-    console.log(filteredData)
+    
+    
     async function senddata(){
             
       try{
+        const filters = {
+        selectedState,
+        selectedDistrict,
+        selectedVillage,
+        size,
+        pricePerAcre,
+        period,
+        irrigationSource,
+      };
+
+      console.log("filter data", filters)
       const response =  await fetch("http://127.0.0.1:8000/filter_land/",
         {
           method:"POST",
           headers:{
             "Content-Type":"application/json"
           },
-          body:JSON.stringify(filteredData)
+          body:JSON.stringify(filters)
         })
         
         if(!response.ok){
@@ -95,42 +103,32 @@ export default function TakeLandOnRentHeader({
     setIsOpen(false);
   };
 
+  const inputClass =
+    "text-white flex flex-col text-base";
+    const placeholder = "bg-white text-black rounded-xl border-gray-800 border-2 w-full";
+
   return (
     <>
-      <nav className="bg-[#2E3944] shadow-md p-4 fixed w-full top-0 left-0 z-50">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-1">
-            <img src="logo.png" alt="Logo" className="h-10" />
-            {isMobile && (
-              <button
-                onClick={() => setIsOpen((prev) => !prev)}
-                className="bg-[#2E3944] text-white p-2  rounded border border-white" style={{ backgroundColor: "#2E3944" }}
-              >
-                Apply Filter
-              </button>
-            )}
-          </div>
-          <div className="flex justify-end">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="bg-gray-700 text-white px-3 py-1 rounded w-32 sm:w-1/2 md:w-2/3 outline-none border border-white placeholder-white"
-            />
-          </div>
-        </div>
-      </nav>
-
+      
+      
+      {/* <SearchUpperNav
+  isSidebarOpen={isOpen}
+  setIsSidebarOpen={setIsOpen}
+/> */}
+     {/* <NavigationBar isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+    <NavigationBar setIsOpen={setIsOpen} />
+   {/* <SearchMachineNavigationBar setIsOpen={setIsOpen} /> */}
       <div className="mt-16"></div>
-
+      
       <div
-  className={`fixed top-16 pt-0 mt-1.5 left-0 w-64 min-h-full bg-gray-800 text-white p-4 transition-transform border-t border-white
+  className={`fixed left-0 h-full w-64 bg-green-800 text-white p-6 shadow-lg z-40 mt-14
     ${isMobile ? (isOpen ? "translate-x-0" : "-translate-x-full") : "translate-x-0"} 
     md:block md:translate-x-0 z-30`}
 >
 
         {isMobile && (
           <button onClick={() => setIsOpen(false)} className="absolute top-2 right-2 text-white">
-            <X size={24} />
+            <X size={24} className="mt-6"/>
           </button>
         )}
         <h2 className="text-lg font-bold">Apply Filters</h2>
@@ -138,14 +136,15 @@ export default function TakeLandOnRentHeader({
         <div className="mt-4 text-white">
           <label className="block">Select Location</label>
           <SelectAddress
-            selectedState={selectedState}
-            setSelectedState={setSelectedState}
-            selectedDistrict={selectedDistrict}
-            setSelectedDistrict={setSelectedDistrict}
-            selectedVillage={selectedVillage}
-            setSelectedVillage={setSelectedVillage}
-            className="text-white bg-[#2E3944]"
-          />
+          selectedState={selectedState}
+          selectedDistrict={selectedDistrict}
+          selectedVillage={selectedVillage}
+          setSelectedState={setSelectedState}
+          setSelectedDistrict={setSelectedDistrict}
+          setSelectedVillage={setSelectedVillage}
+          className={inputClass}
+          placeholder={placeholder}
+        />
         </div>
 
         <div className="mt-4">
@@ -155,7 +154,7 @@ export default function TakeLandOnRentHeader({
             name="size"
             value={size}
             onChange={(e)=> {setsize(e.target.value)}}
-            className="w-full p-2 text-black rounded bg-white h-6"
+            className="bg-white text-black rounded-lg border-gray-800 border-2 w-full"
           />
         </div>
 
@@ -166,7 +165,7 @@ export default function TakeLandOnRentHeader({
             name="pricePerAcre"
             value={pricePerAcre}
             onChange={(e)=> {setpricePerAcre(e.target.value)}}
-            className="w-full p-2 text-black rounded bg-white h-6"
+            className="bg-white text-black rounded-lg border-gray-800 border-2 w-full"
           />
         </div>
         
@@ -177,7 +176,7 @@ export default function TakeLandOnRentHeader({
             name="period"
             value={period}
             onChange={(e)=> {setperiod(e.target.value)}}
-            className="w-full p-2 text-black rounded bg-white h-6"
+            className="bg-white text-black rounded-lg border-gray-800 border-2 w-full"
           />
         </div>
 
@@ -196,7 +195,7 @@ export default function TakeLandOnRentHeader({
                       return [...updatedSet];
                     });
                   }}
-                  className="form-checkbox"
+                  className="h-5 w-5 rounded border border-gray-400 bg-white checked:bg-green-800 checked:border-green-800 checked:text-white checked:content-['✓'] flex items-center justify-center"
                 />
                 {source}
               </label>
@@ -204,7 +203,7 @@ export default function TakeLandOnRentHeader({
           </div>
         </div>
 
-        <button onClick={applyFilters} className="mt-4 w-full p-2 bg-[#2E3944] text-white rounded">
+        <button onClick={applyFilters} className="mt-4 w-full p-2 bg-green-950 text-white rounded">
           Apply Filter
         </button>
       </div>

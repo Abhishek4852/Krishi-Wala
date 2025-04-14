@@ -1,38 +1,46 @@
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, Menu, Home } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import ChatSupport from "./ChatSupport";
 
 export default function NavigationBar({ isOpen, setIsOpen }) {
   const [isMobile, setIsMobile] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkScreenSize = () => setIsMobile(window.innerWidth < 768);
-    checkScreenSize(); // Run initially
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
   return (
-    <nav className="bg-[#2E3944] shadow-md p-4 fixed w-full top-0 left-0 z-50">
+    <nav className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-800 shadow-md p-4 fixed w-full top-0 left-0 z-50">
       <div className="container mx-auto flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <img src="logo.png" alt="Logo" className="h-10" />
+        <div className="flex items-center gap-2">
           {isMobile && (
             <button
               onClick={() => setIsOpen((prev) => !prev)}
-              className="bg-[#2E3944] text-white p-2 rounded border border-[#2E3944]"
-        
+              className="text-green-700 p-2 rounded border"
             >
-              Apply Filter
+              <Menu className="text-green-700" size={28} />
             </button>
           )}
+          <h1 className="font-bold text-green-700 text-xl sm:text-4xl">
+            🌾 KrishiWala
+          </h1>
         </div>
-        <div className="flex justify-end">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="bg-gray-700 text-white px-3 py-1 rounded w-32 sm:w-1/2 md:w-2/3 outline-none border border-white placeholder-white"
-          />
-        </div>
+          <ChatSupport/>
+        {/* Home Button */}
+        <button
+          onClick={() => navigate("/")}
+          className="flex items-center gap-1 text-green-800 hover:text-green-900  hover:bg-green-300 px-4 py-2 rounded-lg shadow-sm transition-all duration-200"
+        >
+          <Home size={20} />
+          <span className="font-semibold">Home</span>
+        </button>
       </div>
     </nav>
   );

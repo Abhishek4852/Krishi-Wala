@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import Headerpart from "./Headerpart";
 import { useNavigate } from "react-router-dom";
-import machine_data from "./machine_data.json";
+
 import SelectMachine from "./SelectMachine";
 import SelectTractor from "./SelectTractor";
 import SelectAddress from "./SelectAddress";
 import BankDetails from "./BankDetails";
+import ChatSupport from "./ChatSupport";
 
 
 function MachineRegistration() {
@@ -39,7 +40,48 @@ function MachineRegistration() {
       const [selectedDistrict, setSelectedDistrict] = useState("");
       const [selectedVillage, setSelectedVillage] = useState("");
 
-
+      const [userName, setUserName]=useState("")
+      const [UserNumber, setUserNumber] = useState("")
+      
+        useEffect(() => {
+          const verifyToken = async () => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              alert("Please log in first.");
+              navigate("/login");
+              return;
+            }
+      
+            try {
+              const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ token }),
+              });
+      
+              const data = await response.json();
+              console.log(data)
+              if (response.ok) {
+                setUserName(data.name); // Set name from response
+                setUserNumber(data.mobile); // Set number from response
+              } else {
+                alert(data.error || "Invalid token. Please log in again.");
+                localStorage.removeItem("token");
+                navigate("/login");
+              }
+            } catch (error) {
+              console.error("Token validation error:", error);
+              alert("Something went wrong. Try logging in again.");
+              localStorage.removeItem("token");
+              navigate("/login");
+            }
+          };
+      
+          verifyToken();
+        }, [navigate]);
+      
 
 
       const handleFileChange = (e) => {
@@ -58,9 +100,12 @@ function MachineRegistration() {
 
   const handleSubmit = () => {
     if (isAllFieldEntered()) {
+   
       if (isAllFieldValid()) {
+       
         const formData = new FormData();
 formData.append("ownerName", ownerName);
+
 formData.append("Mobileno", String(Mobileno));
 formData.append("selectedState", selectedState);
 formData.append("selectedDistrict", selectedDistrict);
@@ -80,7 +125,7 @@ formData.append("bname", bname);
 formData.append("bankName", bankName);
 formData.append("bAccountNo", bAccountNo);
 formData.append("IFSC", IFSC);
-
+console.log(formData , "fort")
 // Append images properly
 if (machinePhoto) {
     [...machinePhoto].forEach((file, index) => {
@@ -88,7 +133,7 @@ if (machinePhoto) {
     });
 }
         // alert(" Data Submitted Successfully", formData);
-        // console.log(formData);
+        console.log(formData);
 
         async function senddata(){
             
@@ -107,7 +152,7 @@ if (machinePhoto) {
           const data = await response.json();
            console.log(data);
            alert("registered successfully")
-          //  navigate("/");
+           navigate("/");
 
           }
           catch(error){
@@ -214,103 +259,199 @@ function selectLoc(){
         return false;
     }
 }
+  const inputClass =
+    "text-black flex flex-col text-base";
+    const placeholder = "bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full";
+
+
   return (
     <>
-   <Headerpart/>
-    <div className="p-6  bg-[#2E3944]  mt-30 rounded-xl max-w-xl mx-auto border border-gray-400 shadow-lg">
-      <h2 className="text-2xl font-bold mb-4 text-center">Machine Registration Form</h2>
+  <Headerpart />
+  <ChatSupport/>
+  <div className="max-w-6xl mx-auto p-4">
+    <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
+      <h2 className="text-3xl font-bold mb-6 text-center text-green-900">
+        Machine Registration Form
+      </h2>
 
-      <label className="block mt-4">Owner Name:</label>
-      <input type="text" value={ownerName} onChange={(e) => setOwnerName(e.target.value)} className="border p-2 w-full" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className={inputClass}>
+          <label>Owner Name</label>
+          <input
+            type="text"
+            value={userName}
+            onChange={(e) => setOwnerName(e.target.value)}
+            className={placeholder}
+            placeholder="Enter Owner's Full Name"
+          />
+        </div>
 
-      <div className="ml-0 mt-5">   
-            Enter Mobile No.
-            <input
-              type="number"
-              className="border p-2 w-full bg-[#2E3944] text-white"
-              value={Mobileno}
-              onChange={(e) => setMobileno(e.target.value)}
-
-            />
-          </div>
-
-
-
-
-  <div className=" mt-5 ">
-            
-    <span className="">Select Location :</span>
-      <SelectAddress
-              selectedState={selectedState}
-              setSelectedState={setSelectedState}
-              selectedDistrict={selectedDistrict}
-              setSelectedDistrict={setSelectedDistrict}
-              selectedVillage={selectedVillage}
-              setSelectedVillage={setSelectedVillage}
-              className="bg-[#2E3944] text-white"
-            />
-           
-          </div>
-
-
-      <SelectMachine
-          machineName={machineName}
-          setMachineName={setMachineName}
-          purpose={purpose}
-          setPurpose={setPurpose}
+        <div className={inputClass}>
+          <label>Mobile Number</label>
+          <input
+            type="number"
+            value={UserNumber}
+            onChange={(e) => setMobileno(e.target.value)}
+            className={placeholder}
+            placeholder="Enter Mobile Number"
+          />
+        </div>
+        <SelectAddress
+          selectedState={selectedState}
+          selectedDistrict={selectedDistrict}
+          selectedVillage={selectedVillage}
+          setSelectedState={setSelectedState}
+          setSelectedDistrict={setSelectedDistrict}
+          setSelectedVillage={setSelectedVillage}
+          className={inputClass}
+          placeholder={placeholder}
         />
 
-      <label className="block mt-4">Specification (e.g., Capacity):</label>
-      <input type="text" value={specification} onChange={(e) => setSpecification(e.target.value)} className="border p-2 w-full" />
 
-      <label className="block mt-4">With Tractor:</label>
-      <select value={withTractor} onChange={(e) => setWithTractor(e.target.value)} className="border p-2 w-full bg-[#2E3944] text-white">
-        <option>No</option>
-        <option>Yes</option>
-      </select>
-
-      {withTractor === "Yes" && (
-        <>
-          <label className="block mt-4 text-white">Tractor Company:</label>
-          <SelectTractor 
-            brand={tractorCompany} 
-            setBrand={setTractorCompany} 
-            tractorModel={tractorModel} 
-            setTractorModel={setTractorModel} 
+     
+          
+          <SelectMachine
+            machineName={machineName}
+            setMachineName={setMachineName}
+            purpose={purpose}
+            setPurpose={setPurpose}
+            className={inputClass}
+            placeholder={placeholder}
           />
-          {tractorModel && <p className="text-white mt-4">Selected: {tractorModel}</p>}
-        </>
-      )}
-
-      <label className="block mt-4">Hiring Cost Per Acre:</label>
-      <input type="number" value={hiringCostAcre} onChange={(e) => setHiringCostAcre(e.target.value)} className="border p-2 w-full" />
-
-      <label className="block mt-4">Hiring Cost Per Hour:</label>
-      <input type="number" value={hiringCostHour} onChange={(e) => setHiringCostHour(e.target.value)} className="border p-2 w-full" />
-
-      <label className="block mt-4">Quantity of Equipment:</label>
-      <input type="text" value={quantity} onChange={(e) => setQuantity(e.target.value)} className="border p-2 w-full" />
-      < BankDetails
-       name={bname} setName={setbName} 
-       bankName={bankName} setBankName={setBankName} 
-       accountNo={bAccountNo} setAccountNo={setbAccountNo} 
-       IFSC={IFSC} setIFSC={setIFSC} 
-      />
-        
-      <label className="block mt-4">Upload Machine Photo:
-      <span className="text-red-500 ml-1">*</span>  
-      <span className="text-sm text-gray-400 ml-2">Image size should be less than 5MB.</span>
-      </label>
-
-      <input type="file"  accept="image/*" multiple onChange={handleFileChange} className="border p-2 w-full" />
       
 
+        <div className={inputClass}>
+          <label>Specification (e.g., Capacity)</label>
+          <input
+            type="text"
+            value={specification}
+            onChange={(e) => setSpecification(e.target.value)}
+            className={placeholder}
+            placeholder="Enter specification details"
+          />
+        </div>
 
-      <button className="bg-blue-500 text-white p-2 mt-4 w-full" onClick={handleSubmit}>
-        Save Details
-      </button>
+       
+        <div className={inputClass}>
+          <label>Hiring Cost Per Acre</label>
+          <input
+            type="number"
+            value={hiringCostAcre}
+            onChange={(e) => setHiringCostAcre(e.target.value)}
+            className={placeholder}
+            placeholder="Enter cost per acre"
+          />
+        </div>
+
+        <div className={inputClass}>
+          <label>Hiring Cost Per Hour</label>
+          <input
+            type="number"
+            value={hiringCostHour}
+            onChange={(e) => setHiringCostHour(e.target.value)}
+            className={placeholder}
+            placeholder="Enter cost per hour"
+          />
+        </div>
+
+        <div className={inputClass}>
+          <label>Quantity of Equipment</label>
+          <input
+            type="text"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            className={placeholder}
+            placeholder="Enter quantity"
+          />
+        </div>
+        
+       
+
+       
+
+        
+
+        <div className={inputClass}>
+          <label>
+            Upload Machine Photos
+            <span className="text-red-500 ml-1">*</span>
+            <span className="text-sm text-gray-600 ml-2">
+              (Image size should be less than 5MB)
+            </span>
+          </label>
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleFileChange}
+            className="border p-2 rounded bg-white text-black"
+          />
+        </div>
+        <div className={inputClass}>
+          <label>With Tractor</label>
+          <select
+            value={withTractor}
+            onChange={(e) => setWithTractor(e.target.value)}
+            className={`${placeholder} bg-white`}
+          >
+            <option>No</option>
+            <option>Yes</option>
+          </select>
+          </div>
+
+        {withTractor === "Yes" && (
+          <>
+            <div className={inputClass}>
+              <label>Tractor Company & Model</label>
+              <SelectTractor
+                brand={tractorCompany}
+                setBrand={setTractorCompany}
+                tractorModel={tractorModel}
+                setTractorModel={setTractorModel}
+                className={inputClass}
+                placeholder={placeholder}
+              />
+            </div>
+
+            {tractorModel && (
+              <div className={inputClass}>
+                <p className="text-green-900 font-medium">
+                  Selected Tractor Model: {tractorModel}
+                </p>
+              </div>
+            )}
+          </>
+        )}
+         
+         <BankDetails
+          name={bname}
+          setName={setbName}
+          bankName={bankName}
+          setBankName={setBankName}
+          accountNo={bAccountNo}
+          setAccountNo={setbAccountNo}
+          IFSC={IFSC}
+          setIFSC={setIFSC}
+          className={inputClass}
+          placeholder={placeholder}
+        />
+
+
+
+      </div>
+
+      <div className="mt-6 flex justify-center">
+        <button
+          onClick={handleSubmit}
+          className="bg-green-600 text-white px-6 py-2 rounded-full hover:bg-green-700 transition"
+        >
+          Register Machine
+        </button>
+      </div>
     </div>
-    </>
+  </div>
+</>
+
   );
 }
 

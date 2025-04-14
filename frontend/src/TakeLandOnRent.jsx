@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import TakeLandOnRentHeader from "./TakeLandOnRentHeader";
 import BookingRequestLand from "./BookingRequestLand";
 // import { use } from "react";
@@ -35,25 +35,52 @@ const [isBookingOpen, setIsBookingOpen] = useState(false);
   
 
   // Sample API Response (for Testing)
-  useEffect(() => {
-    const sampleData = Array(6).fill().map((_, i) => ({
-      id: i + 1,
-      size: 5 + i,
-      period: 12 + i,
-      pricePerAcre: 15000 + i * 1000,
-      irrigationSource: ["Canal", "Borewell"],
-      extraFacilities: "Electricity, Storage",
-      location: {
-        state: "Madhya Pradesh",
-        district: "Indore",
-        village: `Village ${i + 1}`,
-      },
-      landPhotos: [
-        "land1.png","land2.png"
-      ],
-    }));
-    setLandListings(sampleData);
-  }, []);
+  // useEffect(() => {
+  //   const sampleData = Array(6).fill().map((_, i) => ({
+  //     id: i + 1,
+  //     size: 5 + i,
+  //     period: 12 + i,
+  //     pricePerAcre: 15000 + i * 1000,
+  //     irrigationSource: ["Canal", "Borewell"],
+  //     extraFacilities: "Electricity, Storage",
+  //     location: {
+  //       state: "Madhya Pradesh",
+  //       district: "Indore",
+  //       village: `Village ${i + 1}`,
+  //     },
+  //     landPhotos: [
+  //       "land1.png","land2.png"
+  //     ],
+  //   }));
+  //   setLandListings(sampleData);
+  // }, []);
+
+  const scrollRefs = useRef([]);
+
+
+  const handleScrollWithTimeout = (index) => {
+    const container = scrollRefs.current[index];
+    if (container) {
+      // Show scrollbar immediately when user scrolls
+      container.classList.remove("scrollbar-hide");
+      container.classList.add("scrollbar-thin", "scrollbar-thumb-gray-400");
+  
+      // Clear any previous timeout if it's set
+      if (container.hideScrollbarTimeout) clearTimeout(container.hideScrollbarTimeout);
+  
+      // Set a new timeout to hide scrollbar after 1 second of no scroll
+      container.hideScrollbarTimeout = setTimeout(() => {
+        container.classList.add("scrollbar-hide");
+        container.classList.remove("scrollbar-thin", "scrollbar-thumb-gray-400");
+      }, 1000);
+    }
+  };
+  
+
+
+
+
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -85,20 +112,24 @@ const [isBookingOpen, setIsBookingOpen] = useState(false);
         <div className="flex-grow p-6 overflow-y-auto max-h-screen flex-col md:ml-64 ">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {landListings.map((land, index) => (
-              <div key={index} className="bg-[#2E3944] shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden w-full">
+              <div key={index} className="bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 text-black border-2 border-green-700   shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden w-full">
                 
                 {/* Left Side - Image Slider */}
                 <div className="w-full md:w-1/2 relative overflow-hidden">
-                  <div className="flex overflow-x-scroll space-x-2 p-2 scrollbar-hide">
-                    {land.images?.map((photo, idx) => (
-                  <img 
-                    key={idx}  
-                    src={`data:image/jpeg;base64,${photo}`}  
-                    alt="Land" 
-                    className="w-full h-56 object-cover rounded-lg"
-                  />
-                ))}
-                  </div>
+                <div
+  className="flex overflow-x-auto space-x-2 p-2 scrollbar-hide"
+  ref={(el) => (scrollRefs.current[index] = el)}
+  onScroll={() => handleScrollWithTimeout(index)}
+>
+  {land.images?.map((photo, idx) => (
+    <img
+      key={idx}
+      src={`http://127.0.0.1:8000${photo}`}
+      alt="Land"
+      className="w-full h-56 object-cover rounded-lg"
+    />
+  ))}
+</div>
                 </div>
 
                 {/* Right Side - Details */}

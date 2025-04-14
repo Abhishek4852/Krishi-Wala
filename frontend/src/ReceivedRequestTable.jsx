@@ -12,6 +12,22 @@ const ReceivedRequestTable = () => {
 
   const handleFetchRequests = async () => {
     setLoading(true);
+    const token = localStorage.getItem("token");
+    console.log(token);
+    
+    const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: token, // or receiver_mobile: "1234567890" if needed
+      }),
+    });
+    
+    const data2 = await response.json();
+    console.log(data2.mobile);
+    
     try {
       const response = await fetch("http://127.0.0.1:8000/recieved_request/", {
         method: "POST",
@@ -19,7 +35,7 @@ const ReceivedRequestTable = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          receiver_mobile: "8103817747", // Replace with dynamic mobile if needed
+          receiver_mobile: data2.mobile, // Replace with dynamic mobile if needed
         }),
       });
 
@@ -109,6 +125,7 @@ senddata();
           <table className="min-w-full border border-black text-sm">
             <thead className="bg-gray-100">
               <tr>
+                <th className="border border-black px-4 py-2 text-left">Sr. No.</th>
                 <th className="border border-black px-4 py-2 text-left">Request ID</th>
                 <th className="border border-black px-4 py-2 text-left">Request Type</th>
                 <th className="border border-black px-4 py-2 text-left">Received Date</th>
@@ -117,8 +134,9 @@ senddata();
               </tr>
             </thead>
             <tbody>
-              {requests.filter(req => req.sender?.status === "pending").map((req) => (
-                <tr key={req.id} className="hover:bg-gray-50">
+              {requests.filter(req => req.sender?.status === "pending").map((req,index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="border border-black px-4 py-2">{index+1}</td>
                   <td className="border border-black px-4 py-2">{req.id}</td>
                   <td className="border border-black px-4 py-2">{req.type}</td>
                   <td className="border border-black px-4 py-2">{req.receivedDate}</td>

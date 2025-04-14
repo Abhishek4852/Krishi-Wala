@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import jsonData from "./address_data.json"; // Import JSON file
 
-function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setSelectedDistrict, selectedVillage, setSelectedVillage , className = ""  }) {
+function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setSelectedDistrict, selectedVillage, setSelectedVillage , className = "",placeholder=""  }) {
   const [districts, setDistricts] = useState([]);
   const [villages, setVillages] = useState([]);
 
@@ -23,28 +23,39 @@ function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setS
   };
 
   return (
-    <div className={`text-white ${className} `}>
-      <select onChange={handleStateChange} value={selectedState}>
-        <option value="">Select State</option>
-        {Object.keys(jsonData).map((state, index) => (
-          <option key={index} value={state}>{state}</option>
-        ))}
-      </select>
+    <>
+    
+    <div className={` ${className} `}>
+    <label className="font-semibold block mb-1">Select State</label>
+    <select onChange={handleStateChange} value={selectedState} className={placeholder}>
+      <option value="">Select State</option>
+      {Object.keys(jsonData).map((state, index) => (
+        <option key={index} value={state}>{state}</option>
+      ))}
+    </select>
+  </div>
 
-      <select onChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState}>
-        <option value="">Select District</option>
-        {districts.map((district, index) => (
-          <option key={index} value={district}>{district}</option>
-        ))}
-      </select>
+  <div className={` ${className} `}>
+    <label className="font-semibold block mb-1">Select District</label>
+    <select onChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState} className={placeholder}>
+      <option value="">Select District</option>
+      {districts.map((district, index) => (
+        <option key={index} value={district}>{district}</option>
+      ))}
+    </select>
+  </div>
 
-      <select onChange={(e) => setSelectedVillage(e.target.value)} value={selectedVillage} disabled={!selectedDistrict}>
-        <option value="">Select Village</option>
-        {villages.map((village, index) => (
-          <option key={index} value={village}>{village}</option>
-        ))}
-      </select>
-    </div>
+  <div className={` ${className} `}>
+    <label className="font-semibold block mb-1">Select Village</label>
+    <select onChange={(e) => setSelectedVillage(e.target.value)} value={selectedVillage} disabled={!selectedDistrict} className={placeholder}>
+      <option value="">Select Village</option>
+      {villages.map((village, index) => (
+        <option key={index} value={village}>{village}</option>
+      ))}
+    </select>
+  </div>
+
+</>
   );
 }
 

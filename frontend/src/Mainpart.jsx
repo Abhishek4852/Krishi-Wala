@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import ChatSupport from "./ChatSupport";
 
 const cardData = [
   { image: "postland.webp", text: "Post Land", link: "/PostLand" },
@@ -51,20 +52,73 @@ const Mainpart = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 p-6 mt-25">
+    <div className="flex flex-col items-center gap-6 p-6  bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200">
+      <div className="mt-10 bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200">
+      <div className="text-2xl text-black flex flex-wrap w-full justify-evenly mb-10">
+  <button
+    onClick={() => handleClick("/PostLand")}
+    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+  >
+    Land Registration
+  </button>
+
+  <button
+    onClick={() => handleClick("/TakeLandOnRent")}
+    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+  >
+    Search Land
+  </button>
+
+  <button
+    onClick={() => handleClick("/MachineRegistration")}
+    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+  >
+    Machine Registration
+  </button>
+
+  <button
+    onClick={() => handleClick("/SearchMachinary")}
+    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+  >
+    Search Machine
+  </button>
+
+  <button
+    onClick={() => handleClick("/LabourRegistration")}
+    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+  >
+    Labour Registration
+  </button>
+
+  <button
+    onClick={() => handleClick("/SearchLabour")}
+    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+  >
+    Search Labour
+  </button>
+</div>
+
+<img
+  src="imh.png"
+  alt="Main Image"
+  className="w-full max-w-4xl h-auto object-cover rounded-lg shadow-md mx-auto my-6"
+/>
+
+</div>
       {/* First Row (3 Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-3 gap-6">
         {cardData.slice(0, 3).map((card, index) => (
           <Card key={index} image={card.image} text={card.text} handleClick={() => handleClick(card.link)} />
         ))}
-      </div>
+      </div> */}
 
       {/* Second Row (3 Cards) */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
         {cardData.slice(3, 6).map((card, index) => (
           <Card key={index} image={card.image} text={card.text} handleClick={() => handleClick(card.link)} />
         ))}
-      </div>
+      </div> */}
+      <ChatSupport/>
     </div>
   );
 };
@@ -77,6 +131,7 @@ const Card = ({ image, text, handleClick }) => {
         alt={text}
         className="w-full h-full object-cover transition-transform duration-200 hover:scale-[1.25] hover:-rotate-5"
       />
+     
       <div className="absolute bottom-0 left-0 w-full bg-neutral-300 backdrop-blur-md p-4 flex flex-col gap-2 h-[30%] justify-center">
         <button
           className="relative overflow-hidden text-[calc(45vmin*0.065)] text-white px-4 py-2 rounded-lg bg-[#2E3944] transition-all duration-300 ease-in-out group"

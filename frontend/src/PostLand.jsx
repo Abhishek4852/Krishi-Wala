@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SelectAddress from "./SelectAddress";
 import BankDetails from "./BankDetails";
 import { useNavigate } from "react-router-dom";
 import Headerpart from "./Headerpart";
+import ChatSupport from "./ChatSupport";
 
 function PostLand() {
   const [landOwner, setLandOwner] = useState("");
   const [mobile, setMobile] = useState("");
-  const [rentPrice, setRentPrice] = useState(0);
-  const [rentPeriod, setRentPeriod] = useState(0);
+  const [rentPrice, setRentPrice] = useState("");
+  const [rentPeriod, setRentPeriod] = useState("");
   const [irrigationSource, setIrrigationSource] = useState("");
   const [extraFacilities, setExtraFacilities] = useState("");
   const [googleMapLocation, setGoogleMapLocation] = useState("");
   const [landPhotos, setLandPhotos] = useState(null);
-  const [LandSize,setLandSize] = useState(0)
-  const [TotalRentPrice,setTotalRentPrice] = useState(0)
+  const [LandSize,setLandSize] = useState("")
+  const [TotalRentPrice,setTotalRentPrice] = useState("")
 
   // State for address selection
   const [selectedState, setSelectedState] = useState("");
@@ -30,6 +31,53 @@ function PostLand() {
   const handleFileChange = (event) => {
     setLandPhotos(event.target.files);
   };
+
+const [userName, setUserName]=useState("")
+const [UserNumber, setUserNumber] = useState("")
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in first.");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+        console.log(data)
+        if (response.ok) {
+          setUserName(data.name); // Set name from response
+          setUserNumber(data.mobile); // Set number from response
+        } else {
+          alert(data.error || "Invalid token. Please log in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Token validation error:", error);
+        alert("Something went wrong. Try logging in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
+
+
+
+
+
 
   const handleSubmit = () => {
 
@@ -185,154 +233,171 @@ function isAlpha() {
 }
 
 
+  const inputClass =
+    "text-black flex flex-col text-base";
+    const placeholder = "bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full";
+
   return (
     <>
-   <Headerpart />
-<div className="bg-white min-h-screen flex justify-center items-center p-4">
-  <div className="bg-gray-800 text-white p-6 mt-20 rounded-2xl w-full max-w-md sm:w-1/3">
-    <div className="text-2xl font-bold text-center">Land Registration Form</div>
-
-    <div className="mt-6">
-      <label htmlFor="name">Enter Land Owner Name <span className="text-red-500">*</span></label>
-      <input
-        type="text"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={landOwner}
-        onChange={(e) => setLandOwner(e.target.value)}
-      />
+    <Headerpart />
+    <ChatSupport/>
+    <div className="max-w-6xl mx-auto p-4">
+      <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
+        <h2 className="text-3xl font-bold mb-6 text-center text-green-900 dark:text-green-700">
+          Land Registration Form
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col">
+            <label className="font-semibold">Land Owner Name</label>
+            <input
+              type="text"
+              value={userName}
+              onChange={(e) => setLandOwner(e.target.value)}
+              placeholder="Enter Land Owner Name"
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Mobile Number</label>
+            <input
+              type="text"
+              value={UserNumber}
+              onChange={(e) => setMobile(e.target.value)}
+              placeholder="Enter Mobile Number"
+              className={placeholder}
+            />
+          </div>
+  
+         
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Land Size (in acres)</label>
+            <input
+              type="number"
+              value={LandSize}
+              onChange={(e) => setLandSize(e.target.value)}
+              placeholder="Enter Land Size (in acres)"
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Select Irrigation Source</label>
+            <select
+              className={placeholder}
+              value={irrigationSource}
+              onChange={(e) => setIrrigationSource(e.target.value)}
+            >
+              <option>Select Irrigation Source</option>
+              <option>River (if engine for irrigation)</option>
+              <option>Canal (direct water supply, no other things needed for irrigation)</option>
+              <option>Borewell and Well (if motor is needed for irrigation)</option>
+            </select>
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Rent Price (per month)</label>
+            <input
+              type="number"
+              value={rentPrice}
+              onChange={(e) => setRentPrice(e.target.value)}
+              placeholder="Enter Rent Price (per month)"
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Total Rent Price</label>
+            <input
+              type="number"
+              value={TotalRentPrice}
+              onChange={(e) => setTotalRentPrice(e.target.value)}
+              placeholder="Enter Total Rent Price"
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Rent Period (in months)</label>
+            <input
+              type="number"
+              value={rentPeriod}
+              onChange={(e) => setRentPeriod(e.target.value)}
+              placeholder="Enter Rent Period (in months)"
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Extra Facilities (if any)</label>
+            <input
+              type="text"
+              value={extraFacilities}
+              onChange={(e) => setExtraFacilities(e.target.value)}
+              placeholder="Extra Facilities (if any)"
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Google Map Location</label>
+            <input
+              type="text"
+              value={googleMapLocation}
+              onChange={(e) => setGoogleMapLocation(e.target.value)}
+              placeholder="Paste google map location link here..."
+              className={placeholder}
+            />
+          </div>
+  
+          <div className="flex flex-col">
+            <label className="font-semibold">Upload Land Photos</label>
+            <input
+              type="file"
+              multiple
+              onChange={handleFileChange}
+              className="bg-white text-black p-2 rounded-xl border-gray-800 border-2"
+            />
+          </div>
+          <SelectAddress
+            selectedState={selectedState}
+            selectedDistrict={selectedDistrict}
+            selectedVillage={selectedVillage}
+            setSelectedState={setSelectedState}
+            setSelectedDistrict={setSelectedDistrict}
+            setSelectedVillage={setSelectedVillage}
+            className={inputClass}
+            placeholder={placeholder}
+          />
+  
+          {/* You can continue using the same wrapping for the BankDetails section */}
+          <BankDetails
+              name={name}
+              setName={setName}
+              bankName={bankName}
+              setBankName={setBankName}
+              accountNo={accountNo}
+              setAccountNo={setAccountNo}
+              IFSC={IFSC}
+              setIFSC={setIFSC}
+              className={inputClass}
+              placeholder={placeholder}
+            />
+        </div>
+  
+        <div className="text-center mt-6">
+          <button
+            className="bg-green-700 text-white px-6 py-2 rounded-xl hover:bg-green-800 transition duration-200"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      </div>
     </div>
-
-    <div className="mt-4">
-      <p>Select Land Location <span className="text-red-500">*</span></p>
-      <SelectAddress
-        selectedState={selectedState}
-        setSelectedState={setSelectedState}
-        selectedDistrict={selectedDistrict}
-        setSelectedDistrict={setSelectedDistrict}
-        selectedVillage={selectedVillage}
-        setSelectedVillage={setSelectedVillage}
-      />
-    </div>
-
-    <div className="mt-4">
-      <label>Enter Mobile No. <span className="text-red-500">*</span></label>
-      <input
-        type="number"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={mobile}
-        onChange={(e) => setMobile(e.target.value)}
-      />
-    </div>
-
-    <div className="mt-4">
-      <label>Enter Land Size in Acre <span className="text-red-500">*</span></label>
-      <input
-        type="number"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={LandSize}
-        onChange={(e) => setLandSize(e.target.value)}
-      />
-    </div>
-
-    <div className="mt-4">
-      <label>Enter Total Land Renting Price <span className="text-red-500">*</span></label>
-      <input
-        type="number"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={TotalRentPrice}
-        onChange={(e) => setTotalRentPrice(e.target.value)}
-      />
-    </div>
-
-    <div className="mt-4">
-      <label>Enter Rent Price per Acre <span className="text-red-500">*</span></label>
-      <input
-        type="number"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={rentPrice}
-        onChange={(e) => setRentPrice(e.target.value)}
-      />
-    </div>
-
-    <div className="mt-4">
-      <label>Enter Renting Period in Months <span className="text-red-500">*</span></label>
-      <input
-        type="number"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={rentPeriod}
-        onChange={(e) => setRentPeriod(e.target.value)}
-      />
-      <span className="text-white text-sm">(ex: 1,2,3...)</span>
-    </div>
-
-    <div className="mt-4">
-      <label>Select Irrigation Source <span className="text-red-500">*</span></label>
-      <select
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={irrigationSource}
-        onChange={(e) => setIrrigationSource(e.target.value)}
-      >
-        <option>Select</option>
-        <option>River (if engine for irrigation)</option>
-        <option>Canal (direct water supply, no other things needed for irrigation)</option>
-        <option>Borewell and Well (if motor is needed for irrigation)</option>
-      </select>
-    </div>
-
-    <div className="mt-4">
-      <label>Extra Facilities Provided by You <span className="text-red-500">*</span></label>
-      <input
-        type="text"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={extraFacilities}
-        onChange={(e) => setExtraFacilities(e.target.value)}
-      />
-    </div>
-
-    <div className="mt-4">
-      <BankDetails
-        name={name}
-        setName={setName}
-        bankName={bankName}
-        setBankName={setBankName}
-        accountNo={accountNo}
-        setAccountNo={setAccountNo}
-        IFSC={IFSC}
-        setIFSC={setIFSC}
-      />
-    </div>
-
-    <div className="mt-4">
-      <label>Paste Google Map Land Location</label>
-      <input
-        type="url"
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        value={googleMapLocation}
-        onChange={(e) => setGoogleMapLocation(e.target.value)}
-      />
-      <p className="text-sm">How you find location?</p>
-    </div>
-
-    <div className="mt-4">
-      <label>Upload Land Photos</label>
-      <input
-        type="file"
-        multiple
-        className="text-white bg-gray-800 border p-2 w-full rounded-md"
-        onChange={handleFileChange}
-      />
-    </div>
-
-    <div className="mt-6 flex justify-center">
-      <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md" onClick={handleSubmit}>
-        Save Details
-      </button>
-    </div>
-  </div>
-</div>
-
-
-    </>
+  </>
+  
   );
 }
 

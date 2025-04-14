@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import LabourSideBar from "./LabourSideBar";
 import LabourHireRequest from "./LabourHireRequest";
@@ -30,7 +31,7 @@ function SearchLabour() {
 
 
   useEffect(() => {
-    const sampleLabourData = Array(8).fill().map((_, i) => ({
+    const sampleLabourData = Array(4).fill().map((_, i) => ({
       id: i + 1,
       name: `Labour ${i + 1}`,
       labourType: "Construction",
@@ -42,7 +43,7 @@ function SearchLabour() {
         district: "Indore",
         village: `Village ${i + 1}`,
       },
-      profilePhoto: "labour.jpeg",
+      profilePhoto: "profilephoto.png",
     }));
     setLabourListings(sampleLabourData);
   }, []);
@@ -72,7 +73,7 @@ function SearchLabour() {
         <div className="flex-grow p-6 overflow-y-auto max-h-screen ml-0 md:ml-72">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {labourListings.map((labour, index) => (
-              <div key={index} className="bg-gray-800 shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden w-full">
+              <div key={index} className="bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 text-black border-2 border-green-700 shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden w-full">
                 <div className="w-full md:w-1/3 p-2">
                   <img src={`http://127.0.0.1:8000${labour.profilePhoto}`} alt="Labour" className="w-full h-40 object-cover rounded-lg"/>
                 </div>
