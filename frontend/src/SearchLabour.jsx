@@ -75,7 +75,7 @@ function SearchLabour() {
             {labourListings.map((labour, index) => (
               <div key={index} className="bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 text-black border-2 border-green-700 shadow-lg rounded-lg flex flex-col md:flex-row overflow-hidden w-full">
                 <div className="w-full md:w-1/3 p-2">
-                  <img src={`http://127.0.0.1:8000${labour.profilePhoto}`} alt="Labour" className="w-full h-40 object-cover rounded-lg"/>
+                  <img src={`https://krishi-wala.onrender.com${labour.profilePhoto}`} alt="Labour" className="w-full h-40 object-cover rounded-lg"/>
                 </div>
                 <div className="w-full md:w-2/3 p-4 flex flex-col justify-between">
                   <div>

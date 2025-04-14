@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 
 import SelectAddress from "./SelectAddress";
+import { useNavigate } from "react-router-dom";
 
 function BookingRequestMachine({ open, setOpen, machinedata }) {
   const [name, setName] = useState("");
@@ -12,7 +13,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
   const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedVillage, setSelectedVillage] = useState("");
-
+ const navigate = useNavigate()
   const validate = () => {
     if (!name.trim()) return alert("Please enter your name");
     if (!/^\d{10}$/.test(mobile)) return alert("Enter a valid 10-digit mobile number");
@@ -20,6 +21,52 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
     if (!selectedState || !selectedDistrict || !selectedVillage) return alert("Please select a valid location");
     return true;
   };
+
+  const [userName, setUserName]=useState("")
+  const [UserNumber, setUserNumber] = useState("")
+  
+    useEffect(() => {
+      const verifyToken = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in first.");
+          navigate("/login");
+          return;
+        }
+  
+        try {
+          const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+          });
+  
+          const data = await response.json();
+          console.log(data)
+          if (response.ok) {
+            setUserName(data.name); // Set name from response
+            setUserNumber(data.mobile); // Set number from response
+
+            setName(userName)
+            setMobile(UserNumber)
+
+          } else {
+            alert(data.error || "Invalid token. Please log in again.");
+            localStorage.removeItem("token");
+            navigate("/login");
+          }
+        } catch (error) {
+          console.error("Token validation error:", error);
+          alert("Something went wrong. Try logging in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      };
+  
+      verifyToken();
+    }, [navigate]);
 
   const handleSubmit = () => {
     if (validate()) {
@@ -41,7 +88,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
 
       async function senddata(){
         try {
-          const response = await fetch("http://127.0.0.1:8000/machine_request/",{
+          const response = await fetch("https://krishi-wala.onrender.com/machine_request/",{
             method:"POST",
             headers:{
               'Content-Type':"application/json"
@@ -102,16 +149,16 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
             <input
               type="text"
               placeholder="Enter Your Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={userName}
+              // onChange={(e) => setName(e.target.value)}
               className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
             <input
               type="text"
               placeholder="Enter Mobile Number"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
+              value={UserNumber}
+              // onChange={(e) => setMobile(e.target.value)}
               className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
@@ -120,7 +167,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               <div className="flex space-x-2">
                 <input
                   type="date"
-                  className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
+                  className="bg-gray-300 text-black rounded-xl p-2 border-gray-800 border-2 w-full"
                   value={rentingPeriod.start}
                   onChange={(e) =>
                     setRentingPeriod({ ...rentingPeriod, start: e.target.value })
@@ -128,7 +175,7 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
                 />
                 <input
                   type="date"
-                  className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
+                  className="bg-gray-300 text-black rounded-xl p-2 border-gray-800 border-2 w-full"
                   value={rentingPeriod.end}
                   onChange={(e) =>
                     setRentingPeriod({ ...rentingPeriod, end: e.target.value })

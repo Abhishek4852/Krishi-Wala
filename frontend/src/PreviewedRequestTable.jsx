@@ -24,7 +24,7 @@ const PreviewedRequestTable = () => {
       }
   
       try {
-        const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -51,7 +51,7 @@ const PreviewedRequestTable = () => {
     
    
     try {
-      const response = await fetch("http://127.0.0.1:8000/recieved_request/", {
+      const response = await fetch("https://krishi-wala.onrender.com/recieved_request/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -104,7 +104,7 @@ const requestupdate = {
     }
     async function senddata(){
         try {
-          const response = await fetch("http://127.0.0.1:8000/preview_request/",{
+          const response = await fetch("https://krishi-wala.onrender.com/preview_request/",{
             method:"POST",
             headers:{
               'Content-Type':"application/json"

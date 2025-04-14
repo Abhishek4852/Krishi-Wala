@@ -8,6 +8,20 @@ import ChatSupport from "./ChatSupport";
 function LabourRegistration() {
   const navigate =useNavigate();
 
+
+  const [bname, setbName] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [bAccountNo, setbAccountNo] = useState("");
+  const [IFSC, setIFSC] = useState("");
+  const [name, setName] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [workType, setWorkType] = useState("");
+  const [otherWork, setOtherWork] = useState("");
+  const [price, setPrice] = useState(0);
+  const [priceType, setPriceType] = useState("Per Day");
+  
+
+
   const [userName, setUserName]=useState("")
   const [UserNumber, setUserNumber] = useState("")
   
@@ -21,7 +35,7 @@ function LabourRegistration() {
         }
   
         try {
-          const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+          const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -34,6 +48,8 @@ function LabourRegistration() {
           if (response.ok) {
             setUserName(data.name); // Set name from response
             setUserNumber(data.mobile); // Set number from response
+            setName(userName)
+            setMobile(UserNumber)
           } else {
             alert(data.error || "Invalid token. Please log in again.");
             localStorage.removeItem("token");
@@ -52,17 +68,7 @@ function LabourRegistration() {
   
 
   // BankDetails 
-  const [bname, setbName] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [bAccountNo, setbAccountNo] = useState("");
-  const [IFSC, setIFSC] = useState("");
-  const [name, setName] = useState("");
-  const [mobile, setMobile] = useState("");
-  const [workType, setWorkType] = useState("");
-  const [otherWork, setOtherWork] = useState("");
-  const [price, setPrice] = useState(0);
-  const [priceType, setPriceType] = useState("Per Day");
-  
+ 
 
 
 
@@ -127,7 +133,7 @@ function LabourRegistration() {
               formData.append("avatar", formData1.avatar);
             }
         
-            const response = await fetch("http://127.0.0.1:8000/labour_registration/", {
+            const response = await fetch("https://krishi-wala.onrender.com/labour_registration/", {
               method: "POST",
               body: formData, // No need for headers, Fetch auto-sets `multipart/form-data`
             });
@@ -326,7 +332,7 @@ const inputClass =
           )}
 
           <div className="flex flex-col">
-            <label className="font-semibold">Price</label>
+            <label className="font-semibold">Enter Wage</label>
             <input
               type="number"
               value={price}
@@ -337,7 +343,7 @@ const inputClass =
           </div>
 
           <div className="flex flex-col">
-            <label className="font-semibold">Price Type</label>
+            <label className="font-semibold">Select Wage scale</label>
             <select
               value={priceType}
               onChange={(e) => setPriceType(e.target.value)}

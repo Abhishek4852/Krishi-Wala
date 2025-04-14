@@ -53,7 +53,7 @@ function MachineRegistration() {
             }
       
             try {
-              const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+              const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -66,6 +66,10 @@ function MachineRegistration() {
               if (response.ok) {
                 setUserName(data.name); // Set name from response
                 setUserNumber(data.mobile); // Set number from response
+
+                setOwnerName(userName)
+                setMobileno(UserNumber)
+
               } else {
                 alert(data.error || "Invalid token. Please log in again.");
                 localStorage.removeItem("token");
@@ -138,7 +142,7 @@ if (machinePhoto) {
         async function senddata(){
             
           try{
-          const response =  await fetch("http://127.0.0.1:8000/machine_registration/",
+          const response =  await fetch("https://krishi-wala.onrender.com/machine_registration/",
             {
               method:"POST",
               

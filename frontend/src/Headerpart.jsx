@@ -28,7 +28,7 @@ export default function Headerpart() {
       }
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

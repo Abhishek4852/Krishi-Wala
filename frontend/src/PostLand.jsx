@@ -45,7 +45,7 @@ const [UserNumber, setUserNumber] = useState("")
       }
 
       try {
-        const response = await fetch("http://127.0.0.1:8000/token_validation/", {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -57,7 +57,9 @@ const [UserNumber, setUserNumber] = useState("")
         console.log(data)
         if (response.ok) {
           setUserName(data.name); // Set name from response
-          setUserNumber(data.mobile); // Set number from response
+          setUserNumber(data.mobile); 
+          setLandOwner(userName)
+          setMobile(UserNumber)// Set number from response
         } else {
           alert(data.error || "Invalid token. Please log in again.");
           localStorage.removeItem("token");
@@ -115,7 +117,7 @@ const [UserNumber, setUserNumber] = useState("")
               async function senddata(){
               
                 try{
-                const response =  await fetch("http://127.0.0.1:8000/post_land/",
+                const response =  await fetch("https://krishi-wala.onrender.com/post_land/",
                   {
                     method:"POST",
                     
@@ -154,6 +156,13 @@ const [UserNumber, setUserNumber] = useState("")
   }
 
 function isallfieldentered(){
+  console.log(landOwner)
+  console.log(mobile)
+  console.log(rentPrice)
+  console.log(rentPeriod)
+  console.log(irrigationSource)
+  console.log(name)
+  console.log(bankName)
     return (landOwner !== ""  &&  mobile !== "" && rentPrice !== "" && rentPeriod !== "" && irrigationSource !== "" && name !== "" && bankName !== "" && accountNo !== "" && IFSC !== "" && rentPrice > 0 && TotalRentPrice > 0 && LandSize > 0 ) 
 }
 
@@ -240,7 +249,7 @@ function isAlpha() {
   return (
     <>
     <Headerpart />
-    <ChatSupport/>
+    {/* <ChatSupport/> */}
     <div className="max-w-6xl mx-auto p-4">
       <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-center text-green-900 dark:text-green-700">

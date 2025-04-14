@@ -65,7 +65,7 @@ export default function TakeLandOnRentHeader({
       };
 
       console.log("filter data", filters)
-      const response =  await fetch("http://127.0.0.1:8000/filter_land/",
+      const response =  await fetch("https://krishi-wala.onrender.com/filter_land/",
         {
           method:"POST",
           headers:{

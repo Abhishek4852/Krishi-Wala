@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
+import { useNavigate } from "react-router-dom";
+
 
 const BookingRequestLand = ({ isOpen, onClose, landData }) => {
   const [name, setName] = useState("");
@@ -7,6 +9,8 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
   const [landSize, setLandSize] = useState("");
   const [rentingPeriod, setRentingPeriod] = useState({ start: "", end: "" });
   const [description, setDescription] = useState("");
+ 
+  const navigate = useNavigate()
 
   const validateForm = () => {
     const nameRegex = /^[A-Za-z\s]+$/;
@@ -30,6 +34,51 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
     }
     return true;
   };
+  const [userName, setUserName]=useState("")
+  const [UserNumber, setUserNumber] = useState("")
+  
+    useEffect(() => {
+      const verifyToken = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Please log in first.");
+          navigate("/login");
+          return;
+        }
+  
+        try {
+          const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
+          });
+  
+          const data = await response.json();
+          console.log(data)
+          if (response.ok) {
+            setUserName(data.name); // Set name from response
+            setUserNumber(data.mobile); // Set number from response
+
+            setName(userName)
+            setMobile(UserNumber)
+
+          } else {
+            alert(data.error || "Invalid token. Please log in again.");
+            localStorage.removeItem("token");
+            navigate("/login");
+          }
+        } catch (error) {
+          console.error("Token validation error:", error);
+          alert("Something went wrong. Try logging in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      };
+  
+      verifyToken();
+    }, [navigate]);
 
   const handleSubmit = () => {
     if (validateForm()) {
@@ -47,7 +96,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
 
       async function senddata(){
         try {
-          const response = await fetch("http://127.0.0.1:8000/land_request/",{
+          const response = await fetch("https://krishi-wala.onrender.com/land_request/",{
             method:"POST",
             headers:{
               'Content-Type':"application/json"
@@ -102,7 +151,7 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
             <input
               type="text"
               className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
-              value={name}
+              value={userName}
               onChange={(e) => setName(e.target.value)}
             />
 
@@ -110,8 +159,8 @@ const BookingRequestLand = ({ isOpen, onClose, landData }) => {
             <input
               type="number"
               className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
-              value={mobile}
-              onChange={(e) => setMobile(e.target.value)}
+              value={UserNumber}
+              // onChange={(e) => setMobile(e.target.value)}
             />
 
             <label className="block mt-2">Enter Land Size (acres)</label>

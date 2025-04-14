@@ -40,7 +40,7 @@ const LabourSideBar = ({responsedata,setresponsedata}) => {
 
 async function senddata(){
     try{
-    const response =  await fetch("http://127.0.0.1:8000/search_labour/",
+    const response =  await fetch("https://krishi-wala.onrender.com/search_labour/",
       {
         method:"POST",
         headers:{

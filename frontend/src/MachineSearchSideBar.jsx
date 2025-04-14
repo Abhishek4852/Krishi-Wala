@@ -52,7 +52,7 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
 
     async function senddata() {
       try {
-        const response = await fetch("http://127.0.0.1:8000/search_machine/", {
+        const response = await fetch("https://krishi-wala.onrender.com/search_machine/", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(filterdata),

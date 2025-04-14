@@ -124,7 +124,7 @@ const [isBookingOpen, setIsBookingOpen] = useState(false);
   {land.images?.map((photo, idx) => (
     <img
       key={idx}
-      src={`http://127.0.0.1:8000${photo}`}
+      src={`https://krishi-wala.onrender.com${photo}`}
       alt="Land"
       className="w-full h-56 object-cover rounded-lg"
     />

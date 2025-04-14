@@ -1,6 +1,7 @@
 import React, { useState , useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import SelectAddress from "./SelectAddress";
+import { useNavigate } from "react-router-dom";
 
 function LabourHireRequest({ labour, open, setOpen }) {
   const [formData, setFormData] = useState({
@@ -13,46 +14,57 @@ function LabourHireRequest({ labour, open, setOpen }) {
     otherWork: "",
     description: "",
   });
- const [pdata, setpdata] = useState("");
-  useEffect(() => {
-    const validateToken = async () => {
-      const token = localStorage.getItem("token");
-      console.log("Token:", token);
-  
-      if (!token) {
-        alert("No token found");
-        return;
-      }
-  
-      try {
-        const response = await fetch("http://127.0.0.1:8000/token_validation/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            token: token,
-          }),
-        });
-  
-        if (!response.ok) {
-          const error = await response.text();
-          throw new Error(error);
-        }
-  
-        const data2 = await response.json();
-        console.log("Mobile from token validation:", data2.mobile);
-        setpdata(data2)
-        // Optional: set the mobile number directly into form
-        
-  
-      } catch (error) {
-        console.error("Token validation failed:", error.message);
-      }
-    };
-  
-    validateToken();
-  }, []); // Empty dependency array = run only once when component mounts
+const navigate = useNavigate()
+
+
+ const [userName, setUserName]=useState("")
+ const [UserNumber, setUserNumber] = useState("")
+ 
+   useEffect(() => {
+     const verifyToken = async () => {
+       const token = localStorage.getItem("token");
+       if (!token) {
+         alert("Please log in first.");
+         navigate("/login");
+         return;
+       }
+ 
+       try {
+         const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify({ token }),
+         });
+ 
+         const data = await response.json();
+         console.log(data)
+         if (response.ok) {
+           setUserName(data.name); // Set name from response
+           setUserNumber(data.mobile); // Set number from response
+
+           setFormData((prev) => ({
+            ...prev,
+            name: data.name,
+            mobile: data.mobile,
+          }));
+
+         } else {
+           alert(data.error || "Invalid token. Please log in again.");
+           localStorage.removeItem("token");
+           navigate("/login");
+         }
+       } catch (error) {
+         console.error("Token validation error:", error);
+         alert("Something went wrong. Try logging in again.");
+         localStorage.removeItem("token");
+         navigate("/login");
+       }
+     };
+ 
+     verifyToken();
+   }, [navigate]);
   
 
   const [rentingPeriod, setRentingPeriod] = useState({ start: "", end: "" });
@@ -102,7 +114,7 @@ function LabourHireRequest({ labour, open, setOpen }) {
     };
     async function senddata(){
       try {
-        const response = await fetch("http://127.0.0.1:8000/labour_request/",{
+        const response = await fetch("https://krishi-wala.onrender.com/labour_request/",{
           method:"POST",
           headers:{
             'Content-Type':"application/json"
@@ -153,7 +165,7 @@ senddata();
             type="text"
             name="name"
             placeholder="Enter your name"
-            value={pdata.name}
+            value={userName}
             onChange={handleChange}
             className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
           />
@@ -162,7 +174,7 @@ senddata();
             type="number"
             name="mobile"
             placeholder="Enter mobile number"
-            value={pdata.mobile}
+            value={UserNumber}
             onChange={handleChange}
             className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
           />
