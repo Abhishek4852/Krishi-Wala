@@ -1,8 +1,7 @@
 import React from "react";
 import Headerpart from "./Headerpart";
 import Mainpart from "./Mainpart";
-import FooterPart from "./FooterPart"; 
-
+import FooterPart from "./FooterPart"
 function Home()
 {
 
@@ -28,7 +27,7 @@ function Home()
         </p>
       </div>
     </div>
-      <FooterPart/>
+     <FooterPart/>
     </>
   );
 };
