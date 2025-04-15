@@ -111,7 +111,7 @@ export default function Headerpart() {
               </button>
               <button
                 className="px-4 py-2 bg-green-800 border border-green-600 text-white font-semibold rounded-full hover:bg-green-200 transition"
-                onClick={() => navigate("https://krishi-wala-fkfg.vercel.app/login")}
+                onClick={() => navigate("/login")}
               >
                 Login
               </button>

@@ -62,7 +62,7 @@ function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user, setIsChat
         {/* Navigation */}
         <div className="mt-6 flex flex-col gap-6 font-medium">
           <a
-            href="/"
+            href="https://krishi-wala-fkfg.vercel.app/"
             className="flex items-center gap-3 hover:text-yellow-300 transition"
           >
             <Home size={24} />
