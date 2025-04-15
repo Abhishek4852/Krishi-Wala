@@ -1,4 +1,4 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Headerpart from "./Headerpart";
 import { useNavigate } from "react-router-dom";
 
@@ -8,20 +8,27 @@ import SelectAddress from "./SelectAddress";
 import BankDetails from "./BankDetails";
 import ChatSupport from "./ChatSupport";
 
-
 function MachineRegistration() {
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
+  const navigate = useNavigate();
 
-   // BankDetails 
-   const [bname, setbName] = useState("");
-   const [bankName, setBankName] = useState("");
-   const [bAccountNo, setbAccountNo] = useState("");
-   const [IFSC, setIFSC] = useState("");
+  const showAlert = (message, type = "success") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => {
+      setAlertMessage("");
+    }, 3000);
+  };
 
-
+  // Bank Details
+  const [bname, setbName] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [bAccountNo, setbAccountNo] = useState("");
+  const [IFSC, setIFSC] = useState("");
 
   const [ownerName, setOwnerName] = useState("");
-  const [Mobileno ,setMobileno] =useState("");
- const navigate = useNavigate()
+  const [Mobileno, setMobileno] = useState("");
   const [specification, setSpecification] = useState("");
   const [withTractor, setWithTractor] = useState("No");
   const [tractorCompany, setTractorCompany] = useState("");
@@ -31,238 +38,189 @@ function MachineRegistration() {
   const [quantity, setQuantity] = useState("");
   const [machinePhoto, setMachinePhoto] = useState(null);
 
-  //Selected machine name or purpose
   const [machineName, setMachineName] = useState("");
   const [purpose, setPurpose] = useState("");
 
-  ////Location Handling
-     const [selectedState, setSelectedState] = useState("");
-      const [selectedDistrict, setSelectedDistrict] = useState("");
-      const [selectedVillage, setSelectedVillage] = useState("");
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedVillage, setSelectedVillage] = useState("");
 
-      const [userName, setUserName]=useState("")
-      const [UserNumber, setUserNumber] = useState("")
-      
-        useEffect(() => {
-          const verifyToken = async () => {
-            const token = localStorage.getItem("token");
-            if (!token) {
-              alert("Please log in first.");
-              navigate("/login");
-              return;
-            }
-      
-            try {
-              const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ token }),
-              });
-      
-              const data = await response.json();
-              console.log(data)
-              if (response.ok) {
-                setUserName(data.name); // Set name from response
-                setUserNumber(data.mobile); // Set number from response
+  const [userName, setUserName] = useState("");
+  const [UserNumber, setUserNumber] = useState("");
 
-                setOwnerName(userName)
-                setMobileno(UserNumber)
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        showAlert("Please log in first.", "error");
+        navigate("/login");
+        return;
+      }
 
-              } else {
-                alert(data.error || "Invalid token. Please log in again.");
-                localStorage.removeItem("token");
-                navigate("/login");
-              }
-            } catch (error) {
-              console.error("Token validation error:", error);
-              alert("Something went wrong. Try logging in again.");
-              localStorage.removeItem("token");
-              navigate("/login");
-            }
-          };
-      
-          verifyToken();
-        }, [navigate]);
-      
+      try {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ token }),
+        });
 
-
-      const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        const validImages = files.filter(file => file.type.startsWith("image/"));
-      
-        if (validImages.length === 0) {
-          alert("Please select at least one image file.");
-          e.target.value = "";
-          return;
+        const data = await response.json();
+        if (response.ok) {
+          setUserName(data.name);
+          setUserNumber(data.mobile);
+          setOwnerName(data.name);
+          setMobileno(data.mobile);
+        } else {
+          showAlert(data.error || "Invalid token. Please log in again.", "error");
+          localStorage.removeItem("token");
+          navigate("/login");
         }
-        
-        setMachinePhoto(validImages);  
-      };
-  
+      } catch (error) {
+        showAlert("Something went wrong. Try logging in again.", "error");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+    const validImages = files.filter(file => file.type.startsWith("image/"));
+    if (validImages.length === 0) {
+      showAlert("Please select at least one image file.", "error");
+      e.target.value = "";
+      return;
+    }
+    setMachinePhoto(validImages);
+  };
 
   const handleSubmit = () => {
     if (isAllFieldEntered()) {
-   
       if (isAllFieldValid()) {
-       
         const formData = new FormData();
-formData.append("ownerName", ownerName);
+        formData.append("ownerName", ownerName);
+        formData.append("Mobileno", String(Mobileno));
+        formData.append("selectedState", selectedState);
+        formData.append("selectedDistrict", selectedDistrict);
+        formData.append("selectedVillage", selectedVillage);
+        formData.append("machineName", machineName);
+        formData.append("purpose", purpose);
+        formData.append("specification", specification);
+        formData.append("withTractor", withTractor);
+        if (withTractor === "Yes") {
+          formData.append("tractorCompany", tractorCompany);
+          formData.append("tractorModel", tractorModel);
+        }
+        formData.append("hiringCostAcre", hiringCostAcre);
+        formData.append("hiringCostHour", hiringCostHour);
+        formData.append("quantity", quantity);
+        formData.append("bname", bname);
+        formData.append("bankName", bankName);
+        formData.append("bAccountNo", bAccountNo);
+        formData.append("IFSC", IFSC);
 
-formData.append("Mobileno", String(Mobileno));
-formData.append("selectedState", selectedState);
-formData.append("selectedDistrict", selectedDistrict);
-formData.append("selectedVillage", selectedVillage);
-formData.append("machineName", machineName);
-formData.append("purpose", purpose);
-formData.append("specification", specification);
-formData.append("withTractor", withTractor);
-if (withTractor === "Yes") {
-    formData.append("tractorCompany", tractorCompany);
-    formData.append("tractorModel", tractorModel);
-}
-formData.append("hiringCostAcre", hiringCostAcre);
-formData.append("hiringCostHour", hiringCostHour);
-formData.append("quantity", quantity);
-formData.append("bname", bname);
-formData.append("bankName", bankName);
-formData.append("bAccountNo", bAccountNo);
-formData.append("IFSC", IFSC);
-console.log(formData , "fort")
-// Append images properly
-if (machinePhoto) {
-    [...machinePhoto].forEach((file, index) => {
-        formData.append(`machinePhoto`, file); 
-    });
-}
-        // alert(" Data Submitted Successfully", formData);
-        console.log(formData);
+        if (machinePhoto) {
+          machinePhoto.forEach(file => {
+            formData.append("machinePhoto", file);
+          });
+        }
 
-        async function senddata(){
-            
-          try{
-          const response =  await fetch("https://krishi-wala.onrender.com/machine_registration/",
-            {
-              method:"POST",
-              
-              body:formData
-            })
-            
-            if(!response.ok){
-                const error = await response.text();
+        async function senddata() {
+          try {
+            const response = await fetch("https://krishi-wala.onrender.com/machine_registration/", {
+              method: "POST",
+              body: formData,
+            });
+
+            if (!response.ok) {
+              const error = await response.text();
               throw new Error(error);
             }
-          const data = await response.json();
-           console.log(data);
-           alert("registered successfully")
-           navigate("/");
 
+            showAlert("Registered successfully", "success");
+            navigate("/");
+          } catch (error) {
+            if (error.name === "TypeError") {
+              showAlert("Network Connection failed", "error");
+            } else {
+              showAlert("Something went wrong", "error");
+            }
           }
-          catch(error){
-            if(error.name === "TypeError"){
-              alert("Network Connection failed")
-            console.log("Network Connection failed ",error.message);
-            }else{ 
-              alert("Something went wrong")
-             console.log("other error ",error.message);
-          }}
-          
-             
         }
-      
-      senddata();
+
+        senddata();
       }
-     
     } else {
-      alert("Please enter all details.");
+      showAlert("Please enter all details.", "error");
     }
   };
 
-
-
   function isAllFieldEntered() {
-    return ownerName && machineName && purpose && specification && hiringCostAcre && hiringCostHour && quantity &&    Mobileno.trim() &&
-    machinePhoto !== null && machinePhoto.length > 0 && selectLoc();
+    return ownerName && machineName && purpose && specification &&
+      hiringCostAcre && hiringCostHour && quantity && Mobileno &&
+      machinePhoto && machinePhoto.length > 0 && selectLoc();
+  }
 
+  function selectLoc() {
+    if (selectedState && selectedDistrict && selectedVillage) {
+      return true;
+    } else {
+      showAlert("Please select location", "error");
+      return false;
+    }
   }
-function selectLoc(){
-  if(selectedState && selectedDistrict && selectedVillage){
-    return true;
-  }
-  else{
-    alert("plese select location")
-    return false;
-  }
-}
+
   function isAllFieldValid() {
-    return isValidName(ownerName) && isValidCost(hiringCostAcre) && isValidCost(hiringCostHour) && isValidQuantity(quantity) && isValidMobile(Mobileno)&& validatebankname() && isvalidaccountno() && isvalidIFSC();
+    return isValidName(ownerName) && isValidCost(hiringCostAcre) &&
+      isValidCost(hiringCostHour) && isValidQuantity(quantity) &&
+      isValidMobile(Mobileno) && validatebankname() &&
+      isvalidaccountno() && isvalidIFSC();
   }
 
   function isValidName(value) {
-    if (/^[A-Za-z\s]+$/.test(value)) {
-      return true;
-    } else {
-      alert("Please enter a valid name.");
-      return false;
-    }
+    if (/^[A-Za-z\s]+$/.test(value)) return true;
+    showAlert("Please enter a valid name.", "error");
+    return false;
   }
-
 
   function isValidCost(value) {
-    if (/^\d+(\.\d{1,2})?$/.test(value)) {
-      return true;
-    } else {
-      alert("Please enter a valid cost.");
-      return false;
-    }
+    if (/^\d+(\.\d{1,2})?$/.test(value)) return true;
+    showAlert("Please enter a valid cost.", "error");
+    return false;
   }
-  function isValidMobile(Mobileno) {
-    if (/^[6-9]\d{9}$/.test(String(Mobileno))) {
-        return true;
-    } else {
-        alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
-        return false;
-    }
-}
 
+  function isValidMobile(mobile) {
+    if (/^[6-9]\d{9}$/.test(mobile)) return true;
+    showAlert("Please enter a valid mobile number.", "error");
+    return false;
+  }
 
-  
-  
   function isValidQuantity(value) {
-    if (/^\d+$/.test(value) && parseInt(value) > 0) {
-      return true;
-    } else {
-      alert("Please enter a valid quantity.");
-      return false;
-    }
+    if (/^\d+$/.test(value) && parseInt(value) > 0) return true;
+    showAlert("Please enter a valid quantity.", "error");
+    return false;
   }
+
   function validatebankname() {
-    if (/^[A-Za-z ]+$/.test(bankName)) {
-      return true;
-    } else {
-      alert("Bank name must contain only alphabets and spaces.");
-      return false;
-    }
+    if (/^[A-Za-z ]+$/.test(bankName)) return true;
+    showAlert("Bank name must contain only letters and spaces.", "error");
+    return false;
   }
-  
+
   function isvalidaccountno() {
-    if (/^\d{9,18}$/.test(bAccountNo)) {
-      return true;
-    } else {
-      alert("Please enter a valid account number (9-18 digits).");
-      return false;
-    }
+    if (/^\d{9,18}$/.test(bAccountNo)) return true;
+    showAlert("Please enter a valid account number (9-18 digits).", "error");
+    return false;
   }
-  
+
   function isvalidIFSC() {
-    if (/^[A-Za-z0-9]+$/.test(IFSC)) {
-        return true;
-    } else {
-        alert("Please enter a valid IFSC code containing only letters (A-Z, a-z) and numbers.");
-        return false;
-    }
-}
+    if (/^[A-Za-z0-9]+$/.test(IFSC)) return true;
+    showAlert("Please enter a valid IFSC code.", "error");
+    return false;
+  }
+
   const inputClass =
     "text-black flex flex-col text-base";
     const placeholder = "bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full";
@@ -272,8 +230,27 @@ function selectLoc(){
     <>
   <Headerpart />
   <ChatSupport/>
-  <div className="max-w-6xl mx-auto p-4">
-    <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
+  <div className="max-w-6xl  mx-auto p-4">
+    <div className="bg-green-100 text-black p-6 rounded-2xl mt-20 border-green-600 border-2 shadow-lg">
+      
+
+    {alertMessage && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-sm">
+          <div
+            className={`p-4 rounded-lg text-center font-medium shadow-lg ${
+              alertType === "error"
+                ? "bg-red-200 text-red-800 border-l-4 border-red-500"
+                : "bg-green-200 text-green-800 border-l-4 border-green-500"
+            }`}
+          >
+            {alertMessage}
+          </div>
+        </div>
+      )}
+
+
+
+
       <h2 className="text-3xl font-bold mb-6 text-center text-green-900">
         Machine Registration Form
       </h2>

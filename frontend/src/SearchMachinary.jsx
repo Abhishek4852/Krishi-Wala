@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import MachineSearchSideBar from "./MachineSearchSideBar";
 import BookingRequestMachine from "./BookingRequestMachine";
+import { useNavigate } from "react-router-dom";
 
 function SearchMachinary() {
   const [responsedata, setresponsedata] = useState();
@@ -17,6 +18,54 @@ function SearchMachinary() {
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [machineryListings, setMachineryListings] = useState([]);
 
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
+
+  const navigate = useNavigate();
+
+  // Alert function
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 3000); // hide after 3s
+  };
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        showAlert("Please log in first.", "error");
+        setTimeout(() => navigate("/login"), 2000);
+        return;
+      }
+       
+      try {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+        showAlert("Apply Filters to Search Land","success");
+        if (!response.ok) {
+          showAlert(data.error || "Invalid token. Please log in again.", "error");
+          localStorage.removeItem("token");
+          setTimeout(() => navigate("/login"), 2000);
+        }
+      } catch (error) {
+        console.error("Token validation error:", error);
+        showAlert("Something went wrong. Try logging in again.", "error");
+        localStorage.removeItem("token");
+        setTimeout(() => navigate("/login"), 2000);
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
+
   useEffect(() => {
     if (Array.isArray(responsedata)) {
       setMachineryListings(responsedata);
@@ -28,7 +77,7 @@ function SearchMachinary() {
   }, [responsedata]);
 
   useEffect(() => {
-    const sampleMachineryData = Array(2)
+    const sampleMachineryData = Array(6)
       .fill()
       .map((_, i) => ({
         id: i + 1,
@@ -51,19 +100,29 @@ function SearchMachinary() {
 
   return (
     <div className="flex pt-16">
-      {/* Sidebar (always visible on large screen) */}
-      {/* <div className="hidden md:block fixed md:w-72 h-screen overflow-y-auto bg-white shadow-md z-10"> */}
-        <MachineSearchSideBar
-          responsedata={responsedata}
-          setresponsedata={setresponsedata}
-        />
-      {/* </div> */}
+      {/* Alert Box */}
+      
 
+      {/* Sidebar */}
+      <MachineSearchSideBar
+        responsedata={responsedata}
+        setresponsedata={setresponsedata}
+      />
+{alertMessage && (
+        <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+          <div
+            className={`p-4 rounded-lg font-medium shadow-lg max-w-sm w-full text-center
+              ${alertType === "error"
+                ? "bg-red-200 text-red-800 border-l-4 border-red-500"
+                : "bg-green-200 text-green-800 border-l-4 border-green-500"
+              }`}
+          >
+            {alertMessage}
+          </div>
+        </div>
+      )}
       {/* Main content */}
       <div className="flex flex-col w-full md:ml-72 min-h-screen">
-        {/* Navbar placeholder (assumed to be globally rendered above) */}
-
-        {/* Cards Section */}
         <div className="p-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 ">
             {machineryListings.map((machine, index) => (

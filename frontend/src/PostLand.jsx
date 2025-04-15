@@ -32,6 +32,17 @@ function PostLand() {
     setLandPhotos(event.target.files);
   };
 
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("error"); // "error" or "success"
+  
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 5000); // Clear after 5 sec
+  };
+
+
+
 const [userName, setUserName]=useState("")
 const [UserNumber, setUserNumber] = useState("")
 
@@ -39,7 +50,7 @@ const [UserNumber, setUserNumber] = useState("")
     const verifyToken = async () => {
       const token = localStorage.getItem("token");
       if (!token) {
-        alert("Please log in first.");
+        showAlert("Please log in first.", "error");
         navigate("/login");
         return;
       }
@@ -56,18 +67,19 @@ const [UserNumber, setUserNumber] = useState("")
         const data = await response.json();
         console.log(data)
         if (response.ok) {
-          setUserName(data.name); // Set name from response
-          setUserNumber(data.mobile); 
-          setLandOwner(userName)
-          setMobile(UserNumber)// Set number from response
+          setUserName(data.name);
+setUserNumber(data.mobile);
+setLandOwner(data.name);
+setMobile(data.mobile);
+
         } else {
-          alert(data.error || "Invalid token. Please log in again.");
+          showAlert(data.error || "Invalid token. Please log in again.","error");
           localStorage.removeItem("token");
           navigate("/login");
         }
       } catch (error) {
         console.error("Token validation error:", error);
-        alert("Something went wrong. Try logging in again.");
+        showAlert("Something went wrong. Try logging in again.","error");
         localStorage.removeItem("token");
         navigate("/login");
       }
@@ -130,16 +142,16 @@ const [UserNumber, setUserNumber] = useState("")
                   }
                 const data = await response.json();
                  console.log(data);
-                 alert("registered successfully")
+                 showAlert("registered successfully")
                  navigate("/");
   
                 }
                 catch(error){
                   if(error.name === "TypeError"){
-                    alert("Network Connection failed")
+                    showAlert("Network Connection failed","error")
                   console.log("Network Connection failed ",error.message);
                   }else{ 
-                    alert("Something went wrong")
+                    showAlert("Something went wrong","error")
                    console.log("other error ",error.message);
                 }}
                 
@@ -149,7 +161,8 @@ const [UserNumber, setUserNumber] = useState("")
             senddata();
         }
     } else {
-        alert("Please Enter all detatails")
+      console.log("ente all field")
+      showAlert("Please Enter all detatails","error")
     }
 
     
@@ -174,7 +187,7 @@ function isAlpha() {
     if (/^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(name) && /^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(landOwner) ) {
       return true;
     } else {
-      alert("Please enter a valid name");
+      showAlert("Please enter a valid name","error");
       return false;
     }
   }
@@ -183,7 +196,7 @@ function isAlpha() {
     if (/^[6-9]\d{9}$/.test(mobile) === true) {
       return true;
     } else {
-      alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
+      showAlert("Please enter a valid mobile number (10 digits, starting from 6-9).","error");
       return false;
     }
   }
@@ -191,7 +204,7 @@ function isAlpha() {
     if (selectedState && selectedDistrict && selectedVillage) {
       return true;
     } else {
-      alert("Please select State, District, and Village.");
+      showAlert("Please select State, District, and Village.","error");
       return false;
     }
   }
@@ -200,7 +213,7 @@ function isAlpha() {
     if (/^\d+(\.\d{1,2})?$/.test(rentPrice) && parseFloat(rentPrice) > 0) {
       return true;
     } else {
-      alert("Please enter a valid rent price (a positive number).");
+      showAlert("Please enter a valid rent price (a positive number).","error");
       return false;
     }
   }
@@ -209,7 +222,7 @@ function isAlpha() {
     if (irrigationSource !== "Select" && irrigationSource !== "") {
       return true;
     } else {
-      alert("Please select an irrigation source.");
+      showAlert("Please select an irrigation source.","error");
       return false;
     }
   }
@@ -218,7 +231,7 @@ function isAlpha() {
     if (/^[A-Za-z ]+$/.test(bankName)) {
       return true;
     } else {
-      alert("Bank name must contain only alphabets and spaces.");
+      showAlert("Bank name must contain only alphabets and spaces.","error");
       return false;
     }
   }
@@ -227,7 +240,7 @@ function isAlpha() {
     if (/^\d{9,18}$/.test(accountNo)) {
       return true;
     } else {
-      alert("Please enter a valid account number (9-18 digits).");
+      showAlert("Please enter a valid account number (9-18 digits).","error");
       return false;
     }
   }
@@ -236,7 +249,7 @@ function isAlpha() {
     if (/^[A-Za-z0-9]+$/.test(IFSC)) {
         return true;
     } else {
-        alert("Please enter a valid IFSC code containing only letters (A-Z, a-z) and numbers.");
+      showAlert("Please enter a valid IFSC code containing only letters (A-Z, a-z) and numbers.","error");
         return false;
     }
 }
@@ -249,9 +262,23 @@ function isAlpha() {
   return (
     <>
     <Headerpart />
+    
+
     {/* <ChatSupport/> */}
-    <div className="max-w-6xl mx-auto p-4">
-      <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
+    <div className="max-w-6xl  mx-auto p-4">
+      <div className="bg-green-100 text-black p-6 rounded-2xl mt-20 border-green-600 border-2 shadow-lg">
+      {alertMessage && (
+  <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+    <div className={`p-4 rounded-lg font-medium shadow-lg max-w-sm w-full text-center
+      ${alertType === "error" 
+        ? "bg-red-200 text-red-800 border-l-4 border-red-500" 
+        : "bg-green-200 text-green-800 border-l-4 border-green-500"
+      }`}>
+      {alertMessage}
+    </div>
+  </div>
+)}
+
         <h2 className="text-3xl font-bold mb-6 text-center text-green-900 dark:text-green-700">
           Land Registration Form
         </h2>

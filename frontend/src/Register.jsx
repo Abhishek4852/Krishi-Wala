@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import Headerpart from './Headerpart';
 
@@ -8,11 +8,21 @@ function Register() {
   const [email, setemail] = useState("");
   const [pass, setpass] = useState("");
   const [cnf_pass, setcnf_pass] = useState("");
+  const [alert, setAlert] = useState({ message: '', type: '' });
+
   const navigate = useNavigate();
+
+  const showAlert = (message, type = 'error') => {
+    setAlert({ message, type });
+
+    setTimeout(() => {
+      setAlert({ message: '', type: '' });
+    }, 4000);
+  };
 
   const check = () => {
     if (!isAllFieldEntered()) {
-      alert("Please enter all details");
+      showAlert("Please enter all details");
       return;
     }
 
@@ -25,8 +35,6 @@ function Register() {
       fpass: pass,
     };
 
-    console.log("Sending data:", formdata);
-
     const senddata = async () => {
       try {
         const response = await fetch("https://krishi-wala.onrender.com/", {
@@ -36,24 +44,21 @@ function Register() {
           },
           body: JSON.stringify(formdata)
         });
-    
-        if (!response.ok) {
-          const error = await response.json(); // Parse the error JSON response
-          const errorMessage = error?.error?.message || "An error occurred"; // Extract error message
-          throw new Error(errorMessage); // Throw the error with the extracted message
-        }
-    
+
         const data = await response.json();
-        console.log("Response:", data);
-        alert(data.message || "Registered successfully");  // Show success message from backend
-        navigate("/Login");
-    
+
+        if (!response.ok) {
+          throw new Error(data?.error?.message || "An error occurred");
+        }
+
+        showAlert(data.message || "Registered successfully", 'success');
+        setTimeout(() => navigate("/Login"), 1500);
       } catch (error) {
-        // Alert the error message from the backend
-        alert(error.message);  // Show the error message such as "User already exists with this mobile number."
+        showAlert(error.message || "Registration failed");
         console.error("Error:", error.message);
       }
     };
+
     senddata();
   };
 
@@ -64,7 +69,7 @@ function Register() {
   const isAlpha = () => {
     const regex = /^[A-Za-z]+( [A-Za-z]+){0,3}$/;
     if (!regex.test(name)) {
-      alert("Please enter a valid name (only alphabets, with at most 3 spaces).");
+      showAlert("Please enter a valid name (only alphabets, with at most 3 spaces).");
       return false;
     }
     return true;
@@ -72,7 +77,7 @@ function Register() {
 
   const isValidMobile = () => {
     if (!/^[6-9]\d{9}$/.test(mobile)) {
-      alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
+      showAlert("Please enter a valid mobile number (10 digits, starting from 6-9).");
       return false;
     }
     return true;
@@ -81,7 +86,7 @@ function Register() {
   const isValidEmail = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
+      showAlert("Please enter a valid email address.");
       return false;
     }
     return true;
@@ -89,12 +94,12 @@ function Register() {
 
   const isValidPassword = () => {
     if (pass.length < 9 || pass.length > 15) {
-      alert("Password must be 9–15 characters.");
+      showAlert("Password must be 9–15 characters.");
       return false;
     }
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)/;
     if (!passwordRegex.test(pass)) {
-      alert("Password must contain at least one letter and one number.");
+      showAlert("Password must contain at least one letter and one number.");
       return false;
     }
     return true;
@@ -102,7 +107,7 @@ function Register() {
 
   const matchpass = () => {
     if (pass !== cnf_pass) {
-      alert("Passwords do not match.");
+      showAlert("Passwords do not match.");
       return false;
     }
     return true;
@@ -112,7 +117,8 @@ function Register() {
 
   return (
     <div>
-    <div className="flex min-h-screen  flex-col md:flex-row h-full">
+      <div className="flex min-h-screen flex-col md:flex-row h-full">
+
         {/* Left Side */}
         <div className="w-full md:w-1/2 flex items-center justify-center text-white p-10 relative overflow-hidden bg-gradient-to-br from-green-600 to-green-800">
           <div className="absolute inset-0 clip-arrow bg-gradient-to-br from-green-600 to-green-800 z-0"></div>
@@ -127,56 +133,60 @@ function Register() {
               Login
             </button>
           </div>
-</div>
+        </div>
 
-<div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 p-8">
-  <div className="bg-white p-8 rounded-xl shadow-3xl w-full max-w-md">
-    <div className="flex items-center justify-center mb-6">
-      <div className="text-4xl mr-2 drop-shadow-xl">🌾</div>
-      <h2 className="text-3xl text-green-700 font-bold text-center">Register</h2>
-    </div>
+        {/* Right Side */}
+        <div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 p-8">
+          <div className="bg-white p-8 rounded-xl shadow-3xl w-full max-w-md">
+            <div className="flex items-center justify-center mb-6">
+              <div className="text-4xl mr-2 drop-shadow-xl">🌾</div>
+              <h2 className="text-3xl text-green-700 font-bold text-center">Register</h2>
+            </div>
 
-    <form>
-      <label className="block text-green-700 font-semibold mb-1">Full Name <span className="text-red-500">*</span></label>
-      <input type="text" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-4" onChange={(e) => setname(e.target.value)} required />
+            {/* Alert Box */}
+            {alert.message && (
+              <div className={`mb-4 p-3 rounded-md text-sm font-medium ${alert.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                {alert.message}
+              </div>
+            )}
 
-      <label className="block  text-green-700  not-last-of-type:font-semibold mb-1">Mobile No. <span className="text-red-500">*</span></label>
-      <input type="text" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-4" onChange={(e) => setmobile(e.target.value)} />
+            <form>
+              <label className="block text-green-700 font-semibold mb-1">Full Name <span className="text-red-500">*</span></label>
+              <input type="text" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-4" onChange={(e) => setname(e.target.value)} required />
 
-      <label className="block text-green-700 font-semibold mb-1">Email ID <span className="text-red-500">*</span></label>
-      <input type="text" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setemail(e.target.value)} />
+              <label className="block text-green-700 font-semibold mb-1">Mobile No. <span className="text-red-500">*</span></label>
+              <input type="text" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-4" onChange={(e) => setmobile(e.target.value)} />
 
-      <label className="block text-green-700 font-semibold mb-1">Password <span className="text-red-500">*</span></label>
-      <input type="password" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setpass(e.target.value)} />
+              <label className="block text-green-700 font-semibold mb-1">Email ID <span className="text-red-500">*</span></label>
+              <input type="text" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setemail(e.target.value)} />
 
-      <label className="block text-green-700 font-semibold mb-1">Confirm Password <span className="text-red-500">*</span></label>
-      <input type="password" className="w-full text-green-800  p-3 border border-green-500 rounded-xl mb-6" onChange={(e) => setcnf_pass(e.target.value)} />
+              <label className="block text-green-700 font-semibold mb-1">Password <span className="text-red-500">*</span></label>
+              <input type="password" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setpass(e.target.value)} />
 
-      <button
-        type="button"
-        className="w-full bg-green-600 text-white py-3 text-lg rounded-xl font-semibold hover:bg-green-700 transition"
-        onClick={check}
-      >
-        Register
-      </button>
-      <p className="mt-2 text-green-800">
-      Already registered?{" "}s
-      <span
-        onClick={() => navigate("/login")}
-        className="underline cursor-pointer font-semibold"
-      >
-        Login
-      </span>
-    </p>
+              <label className="block text-green-700 font-semibold mb-1">Confirm Password <span className="text-red-500">*</span></label>
+              <input type="password" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-6" onChange={(e) => setcnf_pass(e.target.value)} />
 
-      
-    </form>
-  </div>
-</div>
+              <button
+                type="button"
+                className="w-full bg-green-600 text-white py-3 text-lg rounded-xl font-semibold hover:bg-green-700 transition"
+                onClick={check}
+              >
+                Register
+              </button>
 
-
+              <p className="mt-2 text-green-800">
+                Already registered?{" "}
+                <span
+                  onClick={() => navigate("/login")}
+                  className="underline cursor-pointer font-semibold"
+                >
+                  Login
+                </span>
+              </p>
+            </form>
+          </div>
+        </div>
       </div>
-
     </div>
   );
 }

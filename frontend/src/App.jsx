@@ -21,6 +21,7 @@ import SentRequestTable from "./SentRequestTable";
 import ProfilePage from "./ProfilePage";
 import ChatSupport from "./ChatSupport";
 import SearchNavBar from "./SearchNavBar";
+import CallApiButton from "./CallApiButton";
 
 
 
@@ -48,6 +49,7 @@ function App() {
       <Route path="/SentRequestTable" element= {<SentRequestTable />} />
       <Route path="/ProfilePage" element= {<ProfilePage />} />
       <Route path="/ChatSupport" element= {<ChatSupport />} />
+      <Route path="/Abhishek4852" element= {<CallApiButton />} />
      
     </Routes>
   );

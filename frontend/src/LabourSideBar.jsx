@@ -3,8 +3,17 @@ import { Menu, X } from "lucide-react";
 import SelectAddress from "./SelectAddress";
 import NavigationBar from "./NavigationBar";
 
-const LabourSideBar = ({responsedata,setresponsedata}) => {
+const LabourSideBar = ({ responsedata, setresponsedata }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("error");
+
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 3000);
+  };
+
   const [filters, setFilters] = useState({
     workType: "",
     otherWork: "",
@@ -32,65 +41,77 @@ const LabourSideBar = ({responsedata,setresponsedata}) => {
   };
 
   const applyFilters = () => {
-    senddata()
-    // console.log("Applied Filters:", filters);
+    senddata();
     setIsOpen(false);
   };
-  ////request
 
-async function senddata(){
-    try{
-    const response =  await fetch("https://krishi-wala.onrender.com/search_labour/",
-      {
-        method:"POST",
-        headers:{
-          "Content-Type":"application/json"
+  async function senddata() {
+
+if(filters.selectedState == ""){
+  showAlert("please select your state.","error")
+  return
+}
+
+    try {
+      const response = await fetch("https://krishi-wala.onrender.com/search_labour/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body:JSON.stringify(filters)
-      })
-      
-      if(!response.ok){
-          const error = await response.text();
-          
+        body: JSON.stringify(filters),
+      });
+
+      if (!response.ok) {
+        const error = await response.text();
         throw new Error(error);
       }
-    const data = await response.json();
-    //  console.log(data);
-     setresponsedata(data.labourListings)
-     console.log(responsedata)
-     alert(" filtered applied ")
-    }
-    catch(error){
-      if(error.name === "TypeError"){
-        console.log("Geetanshi ")
-        alert("Network Connection failed")
-      console.log("Network Connection failed ",error.message);
-      }else{ 
-        alert("Something went wrong")
-        console.log("bad ")
-       console.log("other error ",error.message);
-    }}
-  }
-  const inputClass =
-  "text-white flex flex-col text-base";
-  const placeholder = "bg-white text-black rounded-xl border-gray-800 border-2 w-full";
 
+      const data = await response.json();
+      setresponsedata(data.labourListings);
+      showAlert("Filters applied successfully!", "success");
+    } catch (error) {
+      if (error.name === "TypeError") {
+        console.log("Network error:", error.message);
+        showAlert("Network Connection failed", "error");
+      } else {
+        console.log("Other error:", error.message);
+        showAlert("Something went wrong", "error");
+      }
+    }
+  }
+
+  const inputClass = "text-white flex flex-col text-base";
+  const placeholder = "bg-white text-black rounded-xl border-gray-800 border-2 w-full";
 
   return (
     <>
       <NavigationBar isOpen={isOpen} setIsOpen={setIsOpen} />
       <div className="mt-16"></div>
 
-      {/* Sidebar */}
+      {alertMessage && (
+        <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+          <div
+            className={`p-4 rounded-lg font-medium shadow-lg max-w-sm w-full text-center ${
+              alertType === "error"
+                ? "bg-red-200 text-red-800 border-l-4 border-red-500"
+                : "bg-green-200 text-green-800 border-l-4 border-green-500"
+            }`}
+          >
+            {alertMessage}
+          </div>
+        </div>
+      )}
+
       <div
-        className={`fixed top-16 left-0 w-72 min-h-full bg-green-700 text-white p-4 transition-transform border-t border-white z-30
-          ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+        className={`fixed top-16 left-0 w-72 min-h-full bg-green-700 text-white p-4 transition-transform border-t border-white z-30 ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        } md:translate-x-0`}
       >
         <button
           onClick={() => setIsOpen(false)}
           className="absolute top-2 right-2 text-white"
         >
-          <X size={24} className="mt-3"/>
+          <X size={24} className="mt-3" />
         </button>
 
         <h2 className="text-lg font-bold">Apply Filters</h2>
@@ -152,18 +173,15 @@ async function senddata(){
         )}
 
         <div className="mt-4">
-          <label className="text-white"> Enter Minimum Experience</label>
+          <label className="text-white">Enter Minimum Experience</label>
           <input
             type="text"
             name="minimumExp"
             value={filters.minimumExp}
             onChange={handleFilterChange}
-            className="bg-white text-black rounded-xl border-gray-800 border-2 w-full "
+            className="bg-white text-black rounded-xl border-gray-800 border-2 w-full"
           />
-            
-          
         </div>
-
 
         <div className="mt-2">
           <label className="block">Wage per Day (₹)</label>

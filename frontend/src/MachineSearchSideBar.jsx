@@ -4,13 +4,21 @@ import SelectAddress from "./SelectAddress";
 import SelectMachine from "./SelectMachine";
 import SelectTractor from "./SelectTractor";
 import NavigationBar from "./NavigationBar";
-import SearchMachineNavigationBar from "./SearchMachineNavigationBar";
 
 const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
   const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedVillage, setSelectedVillage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("success");
+
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 3000);
+  };
 
   const [filters, setFilters] = useState({
     machinePurpose: "",
@@ -25,7 +33,7 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
   const handleFilterChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "number" && Number(value) < 0) {
-      alert("Hiring Cost per Acre cannot be negative.");
+      showAlert("Hiring Cost per Acre cannot be negative.");
       return;
     }
     setFilters((prev) => ({
@@ -35,6 +43,11 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
   };
 
   const applyFilters = () => {
+    if (selectedState === "") {
+      showAlert("Please Select Your State.");
+      return;
+    }
+
     const filterdata = {
       selectedState,
       selectedDistrict,
@@ -48,8 +61,6 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
       hiringCostPerHour: filters.hiringCostPerHour,
     };
 
-    console.log(filterdata);
-
     async function senddata() {
       try {
         const response = await fetch("https://krishi-wala.onrender.com/search_machine/", {
@@ -62,49 +73,43 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
 
         const data = await response.json();
         setresponsedata(data);
-        alert("Filtered applied successfully");
+        showAlert("Filter applied successfully", "success");
       } catch (error) {
         if (error.name === "TypeError") {
-          alert("Network Connection failed");
+          showAlert("Network Connection failed");
           console.log("Network Error: ", error.message);
         } else {
-          alert("Something went wrong");
+          showAlert("Something went wrong");
           console.log("Other Error: ", error.message);
         }
       }
     }
 
     senddata();
-    setIsOpen(false); // Auto close sidebar on mobile
+    setIsOpen(false);
   };
-  const inputClass =
-  "text-white flex flex-col text-base";
+
+  const inputClass = "text-white flex flex-col text-base";
   const placeholder = "bg-white text-black rounded-xl border-gray-800 border-2 w-full";
 
   return (
     <>
+      <NavigationBar isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      {/* <div className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 z-50 text-green-800 shadow-md fixed p-4 w-full top-0 left-0 z-50 ">
-       
-        <button
-          className="md:hidden mr-3 text-green-700"
-          onClick={() => setIsOpen(true)}
-        >
-          <Menu size={28} />
-        </button>
+      {alertMessage && (
+        <div className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-sm">
+          <div
+            className={`p-4 rounded-lg text-center font-medium shadow-lg
+              ${alertType === "error"
+                ? "bg-red-200 text-red-800 border-l-4 border-red-500"
+                : "bg-green-200 text-green-800 border-l-4 border-green-500"
+              }`}
+          >
+            {alertMessage}
+          </div>
+        </div>
+      )}
 
-
-        <h1 className="font-bold text-green-700 text-xl sm:text-4xl">
-          🌾 KrishiWala
-        </h1>
-      </div> */}
-
-  <NavigationBar isOpen={isOpen} setIsOpen={setIsOpen} />
-
-
-  {/* <SearchMachineNavigationBar setIsOpen={setIsOpen} /> */}
-
-      {/* Sidebar */}
       <div
         className={`fixed top-16 left-0 w-72 min-h-full bg-green-700 text-white p-4 transition-transform border-t border-white z-30
           ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
@@ -113,7 +118,7 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
           onClick={() => setIsOpen(false)}
           className="absolute top-2 right-2 text-white"
         >
-          <X size={24} className="mt-3"/>
+          <X size={24} className="mt-3" />
         </button>
 
         <h2 className="text-lg font-bold">Apply Filters</h2>
@@ -121,15 +126,15 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
         <div className="mt-4">
           <label className="block">Select Location</label>
           <SelectAddress
-          selectedState={selectedState}
-          selectedDistrict={selectedDistrict}
-          selectedVillage={selectedVillage}
-          setSelectedState={setSelectedState}
-          setSelectedDistrict={setSelectedDistrict}
-          setSelectedVillage={setSelectedVillage}
-          className={inputClass}
-          placeholder={placeholder}
-        />
+            selectedState={selectedState}
+            selectedDistrict={selectedDistrict}
+            selectedVillage={selectedVillage}
+            setSelectedState={setSelectedState}
+            setSelectedDistrict={setSelectedDistrict}
+            setSelectedVillage={setSelectedVillage}
+            className={inputClass}
+            placeholder={placeholder}
+          />
         </div>
 
         <SelectMachine
@@ -160,8 +165,8 @@ const MachineSearchSideBar = ({ responsedata, setresponsedata }) => {
 
         {filters.withTractor && (
           <SelectTractor
-          className={inputClass}
-          placeholder={placeholder}
+            className={inputClass}
+            placeholder={placeholder}
             brand={filters.tractorBrand}
             setBrand={(val) =>
               setFilters((prev) => ({ ...prev, tractorBrand: val }))

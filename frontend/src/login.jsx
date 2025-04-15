@@ -9,6 +9,15 @@ function Login() {
   const [mobile, setMobile] = useState("");
   const [pass, setPass] = useState("");
   const navigate = useNavigate();
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState(""); // "success" or "error"
+ 
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 3000); // hide after 3s
+  };
+
 
   function isAllFieldEntered() {
     return mobile !== "" && pass !== "";
@@ -25,35 +34,42 @@ function Login() {
           fmobile: mobile,
           fpass: pass,
         };
-
+  
         try {
-          const response = await fetch("https://krishi-wala.onrender.com/login/", {
+          const response = await fetch("http://127.0.0.1:8000/login/", {
             method: "POST",
             headers: {
               'Content-Type': "application/json"
             },
             body: JSON.stringify(formdata)
           });
-
-          if (!response.ok) {
-            const error = await response.text();
-            throw new Error(error);
-          }
-
+  
           const data = await response.json();
-          alert(data.message);
-          localStorage.setItem("token", data.token);
-          navigate("/");
+  
+          if (response.status === 200 && data.status === "success") {
+            showAlert("Login successful", "success");
+            localStorage.setItem("token", data.token);
+            setTimeout(() => navigate("/"), 1000); // slight delay to see success msg
+          } else if (response.status === 401 && data.status === "wrong_password") {
+            showAlert("Incorrect password");
+          } else if (response.status === 404 && data.status === "user_not_found") {
+            showAlert("User not found");
+          } else {
+            showAlert("Something went wrong");
+            console.error("Unexpected response:", data);
+          }
+  
         } catch (e) {
-          alert(e.name === "TypeError" ? "Connection failed" : "Something went wrong");
+          showAlert(e.name === "TypeError" ? "Connection failed" : "Something went wrong");
           console.error(e);
         }
+  
       }
     } else {
-      alert("Please enter all details");
+      showAlert("Please enter all details");
     }
   }
-
+  
   //.........................
   useEffect(() => {
     const inputs = document.querySelectorAll('input');
@@ -71,7 +87,18 @@ function Login() {
 
   return (
     <>
-     
+     {alertMessage && (
+  <div
+    className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-6 py-3 rounded-full shadow-lg font-medium transition duration-300 ${
+      alertType === "success"
+        ? "bg-green-600 text-white"
+        : "bg-red-600 text-white"
+    }`}
+  >
+    {alertMessage}
+  </div>
+)}
+
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200   text-green-700  px-4   ">
         <form className="w-full max-w-4xl bg-white rounded-3xl flex flex-col md:flex-row overflow-hidden shadow-2xl">
           {/* Left Section */}

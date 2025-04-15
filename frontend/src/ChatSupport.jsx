@@ -15,6 +15,16 @@ const ChatSupport = () => {
 
   const messagesEndRef = useRef(null);
 
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+  
+    window.addEventListener("open-chat-support", handleOpen);
+  
+    return () => {
+      window.removeEventListener("open-chat-support", handleOpen);
+    };
+  }, []);
+
 
   useEffect(() => {
     const style = document.createElement('style');
@@ -76,13 +86,17 @@ const ChatSupport = () => {
 
   return (
     <>
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 bg-green-700 text-white p-3 rounded-full shadow-lg hover:bg-green-800 z-50"
-      >
-        <MessageSquare size={24} />
-      </button>
-
+      <div className="fixed bottom-16 right-4 flex flex-col items-center z-50">
+  <button
+    onClick={() => setIsOpen(!isOpen)}
+    className="bg-green-700 text-white p-3 rounded-full shadow-lg hover:bg-green-800"
+  >
+    <MessageSquare size={24} />
+  </button>
+  <span className="mt-2 text-xs text-white bg-green-700 font-bold rounded-full px-2 py-0.5 shadow-sm">
+  Ask Krishi AI
+  </span>
+</div>
       
 
       {isOpen && (

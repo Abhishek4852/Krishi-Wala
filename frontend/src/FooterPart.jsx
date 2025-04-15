@@ -2,7 +2,7 @@ import React from "react";
 
 function FooterPart() {
   return (
-    <footer className="bg-green-700 border-b-4 text-white mt-auto border-t-2 border-green-700 shadow-inner">
+    <footer className="bg-green-700 border-b-4 text-white w-full mt-auto border-t-2 border-green-700 shadow-inner">
       <div className="container mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-12">
         
         {/* Company Info */}

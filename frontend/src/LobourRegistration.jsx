@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Headerpart from "./Headerpart";
 import SelectAddress from "./SelectAddress";
@@ -6,8 +6,7 @@ import BankDetails from "./BankDetails";
 import ChatSupport from "./ChatSupport";
 
 function LabourRegistration() {
-  const navigate =useNavigate();
-
+  const navigate = useNavigate();
 
   const [bname, setbName] = useState("");
   const [bankName, setBankName] = useState("");
@@ -19,77 +18,69 @@ function LabourRegistration() {
   const [otherWork, setOtherWork] = useState("");
   const [price, setPrice] = useState(0);
   const [priceType, setPriceType] = useState("Per Day");
-  
+  const [userName, setUserName] = useState("");
+  const [UserNumber, setUserNumber] = useState("");
+  const [formData1, setFormData1] = useState("");
+  const [age, setAge] = useState(0);
+  const [gender, setGender] = useState("");
+  const [experience, setexperience] = useState(0);
+  const [selectedState, setSelectedState] = useState("");
+  const [selectedDistrict, setSelectedDistrict] = useState("");
+  const [selectedVillage, setSelectedVillage] = useState("");
 
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("error");
 
-  const [userName, setUserName]=useState("")
-  const [UserNumber, setUserNumber] = useState("")
-  
-    useEffect(() => {
-      const verifyToken = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("Please log in first.");
-          navigate("/login");
-          return;
-        }
-  
-        try {
-          const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token }),
-          });
-  
-          const data = await response.json();
-          console.log(data)
-          if (response.ok) {
-            setUserName(data.name); // Set name from response
-            setUserNumber(data.mobile); // Set number from response
-            setName(userName)
-            setMobile(UserNumber)
-          } else {
-            alert(data.error || "Invalid token. Please log in again.");
-            localStorage.removeItem("token");
-            navigate("/login");
-          }
-        } catch (error) {
-          console.error("Token validation error:", error);
-          alert("Something went wrong. Try logging in again.");
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 3000);
+  };
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        showAlert("Please log in first.");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setUserName(data.name);
+          setUserNumber(data.mobile);
+          setName(data.name);
+          setMobile(data.mobile);
+        } else {
+          showAlert(data.error || "Invalid token. Please log in again.");
           localStorage.removeItem("token");
           navigate("/login");
         }
-      };
-  
-      verifyToken();
-    }, [navigate]);
-  
+      } catch (error) {
+        console.error("Token validation error:", error);
+        showAlert("Something went wrong. Try logging in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
 
-  // BankDetails 
- 
-
-
-
-// bad me banai hai inke data db me save krna hai
-  const [formData1,setFormData1] =useState("");
-  const [age, setAge]= useState(0)
-  const [gender,setGender]= useState("")
-  const [experience,setexperience]= useState(0)
-
-
-
-  //Location Handling
-   const [selectedState, setSelectedState] = useState("");
-    const [selectedDistrict, setSelectedDistrict] = useState("");
-    const [selectedVillage, setSelectedVillage] = useState("");
-
+    verifyToken();
+  }, [navigate]);
 
   const handleWorkChange = (e) => {
     setWorkType(e.target.value);
     if (e.target.value !== "Other") {
-      setOtherWork(""); // Clear field if "Other" is not selected
+      setOtherWork("");
     }
   };
 
@@ -98,15 +89,13 @@ function LabourRegistration() {
     if (/^[A-Za-z\s]+$/.test(value) || value === "") {
       setOtherWork(value);
     } else {
-      alert("Please enter only letters and spaces.");
+      showAlert("Please enter only letters and spaces.");
     }
   };
 
   const handleSubmit = () => {
-    if (name && mobile && location && (workType !== "Other" || otherWork) && price && age && gender && experience)  {
-       
-      if(isAllFieldValid()){
-
+    if (name && mobile && location && (workType !== "Other" || otherWork) && price && age && gender && experience) {
+      if (isAllFieldValid()) {
         async function senddata() {
           try {
             const formData = new FormData();
@@ -125,146 +114,133 @@ function LabourRegistration() {
             formData.append("bankName", bankName);
             formData.append("bAccountNo", bAccountNo);
             formData.append("IFSC", IFSC);
-        
 
-            console.log(formData)
-            // Append the profile image (Ensure formData1 contains the file object)
             if (formData1.avatar) {
               formData.append("avatar", formData1.avatar);
             }
-        
+
             const response = await fetch("https://krishi-wala.onrender.com/labour_registration/", {
               method: "POST",
-              body: formData, // No need for headers, Fetch auto-sets `multipart/form-data`
+              body: formData,
             });
-        
-            
-            if(!response.ok){
-                const error = await response.text();
+
+            if (!response.ok) {
+              const error = await response.text();
               throw new Error(error);
             }
-          const data = await response.json();
-           console.log(data);
-           alert("registered successfully")
-           navigate("/");
-
+            const data = await response.json();
+            showAlert("Registered successfully", "success");
+            navigate("/");
+          } catch (error) {
+            if (error.name === "TypeError") {
+              showAlert("Network Connection failed");
+              console.log("Network Connection failed ", error.message);
+            } else {
+              showAlert("Something went wrong");
+              console.log("Other error ", error.message);
+            }
           }
-          catch(error){
-            if(error.name === "TypeError"){
-              alert("Network Connection failed")
-            console.log("Network Connection failed ",error.message);
-            }else{ 
-              alert("Something went wrong")
-             console.log("other error ",error.message);
-          }}
-          
-             
         }
-      
-      senddata();
-       
-        // alert("Data submitted successfully");
-        // console.log(formData)
-        // console.log(formData1)
-      }
 
-      
+        senddata();
+      }
     } else {
-      alert("Please fill in all fields.");
+      showAlert("Please fill in all fields.");
     }
   };
 
- function isAllFieldValid(){
-    return (isAlpha() && validlocation() && isValidMobile() && validatebankname() && isvalidaccountno() && isvalidIFSC() && isPrice() && isage() && isexperience() )
+  function isAllFieldValid() {
+    return (
+      isAlpha() &&
+      validlocation() &&
+      isValidMobile() &&
+      validatebankname() &&
+      isvalidaccountno() &&
+      isvalidIFSC() &&
+      isPrice() &&
+      isage() &&
+      isexperience()
+    );
+  }
 
- } 
- function isAlpha() {
-  if (/^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(name) && /^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(bname) ) {
-    return true;
-  } else {
-    alert("Please enter a valid name");
-    return false;
-  }
-}
-
-function isValidMobile() {
-  if (/^[6-9]\d{9}$/.test(mobile) === true) {
-    return true;
-  } else {
-    alert("Please enter a valid mobile number (10 digits, starting from 6-9).");
-    return false;
-  }
-}
-function validlocation() {
-  if (selectedState && selectedDistrict && selectedVillage) {
-    return true;
-  } else {
-    alert("Please select State, District, and Village.");
-    return false;
-  }
-}
-function validatebankname() {
-    if (/^[A-Za-z ]+$/.test(bankName)) {
+  function isAlpha() {
+    if (/^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(name) && /^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(bname)) {
       return true;
     } else {
-      alert("Bank name must contain only alphabets and spaces.");
+      showAlert("Please enter a valid name");
       return false;
     }
   }
-  
+
+  function isValidMobile() {
+    if (/^[6-9]\d{9}$/.test(mobile)) {
+      return true;
+    } else {
+      showAlert("Please enter a valid mobile number (10 digits, starting from 6-9).");
+      return false;
+    }
+  }
+
+  function validlocation() {
+    if (selectedState && selectedDistrict && selectedVillage) {
+      return true;
+    } else {
+      showAlert("Please select State, District, and Village.");
+      return false;
+    }
+  }
+
+  function validatebankname() {
+    if (/^[A-Za-z ]+$/.test(bankName)) {
+      return true;
+    } else {
+      showAlert("Bank name must contain only alphabets and spaces.");
+      return false;
+    }
+  }
+
   function isvalidaccountno() {
     if (/^\d{9,18}$/.test(bAccountNo)) {
       return true;
     } else {
-      alert("Please enter a valid account number (9-18 digits).");
+      showAlert("Please enter a valid account number (9-18 digits).");
       return false;
     }
   }
-  
+
   function isvalidIFSC() {
     if (/^[A-Za-z0-9]+$/.test(IFSC)) {
-        return true;
+      return true;
     } else {
-        alert("Please enter a valid IFSC code containing only letters (A-Z, a-z) and numbers.");
-        return false;
+      showAlert("Please enter a valid IFSC code containing only letters and numbers.");
+      return false;
     }
-}
-
-function isPrice() {
-  if (/^\d+(\.\d{1,2})?$/.test(price) && parseFloat(price) > 0) {
-    return true;
-  } else {
-    alert("Please enter a valid rent price (a positive number).");
-    return false;
-  }
-}
-// const handleAvatarChange = (e) => {
-//   const file = e.target.files[0];
-//   if (file) {
-//       setFormData1((prevData) => ({ ...prevData, avatar: file }));
-//   }
-// };
-
-
-
-
-function isage(){
-  if(age >= 18 && age <= 60)
-    return true
-  else{
-    alert("enter valid age")
-    return false;
   }
 
-}
-function isexperience(){
-if(experience >= 0 && experience <= 40)
-  return true;
-else{
-  alert("enter valid experience")
-  return false
-}
-}
+  function isPrice() {
+    if (/^\d+(\.\d{1,2})?$/.test(price) && parseFloat(price) > 0) {
+      return true;
+    } else {
+      showAlert("Please enter a valid rent price (a positive number).");
+      return false;
+    }
+  }
+
+  function isage() {
+    if (age >= 18 && age <= 60) return true;
+    else {
+      showAlert("Enter valid age");
+      return false;
+    }
+  }
+
+  function isexperience() {
+    if (experience >= 0 && experience <= 40) return true;
+    else {
+      showAlert("Enter valid experience");
+      return false;
+    }
+  }
 
 const inputClass =
     "text-black flex flex-col text-base";
@@ -273,8 +249,21 @@ const inputClass =
     <>
     <Headerpart />
     <ChatSupport/>
+    {alertMessage && (
+        <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+          <div
+            className={`p-4 rounded-lg font-medium shadow-lg max-w-sm w-full text-center ${
+              alertType === "error"
+                ? "bg-red-200 text-red-800 border-l-4 border-red-500"
+                : "bg-green-200 text-green-800 border-l-4 border-green-500"
+            }`}
+          >
+            {alertMessage}
+          </div>
+        </div>
+      )}
     <div className="max-w-6xl mx-auto p-4">
-      <div className="bg-green-100 text-black p-6 rounded-2xl border-green-600 border-2 shadow-lg">
+      <div className="bg-green-100 text-black p-6 mt-20 rounded-2xl border-green-600 border-2 shadow-lg">
         <h2 className="text-3xl font-bold mb-6 text-center text-green-900 dark:text-green-700">
           Labour Registration Form
         </h2>

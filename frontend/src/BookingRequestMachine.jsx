@@ -1,6 +1,5 @@
-import React, { useState , useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
-
 import SelectAddress from "./SelectAddress";
 import { useNavigate } from "react-router-dom";
 
@@ -13,66 +12,73 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
   const [selectedState, setSelectedState] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [selectedVillage, setSelectedVillage] = useState("");
- const navigate = useNavigate()
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertType, setAlertType] = useState("");
+  const navigate = useNavigate();
+
+  const showAlert = (message, type = "error") => {
+    setAlertMessage(message);
+    setAlertType(type);
+    setTimeout(() => setAlertMessage(""), 3000); // hide after 3s
+  };
+
   const validate = () => {
-    if (!name.trim()) return alert("Please enter your name");
-    if (!/^\d{10}$/.test(mobile)) return alert("Enter a valid 10-digit mobile number");
-    if (!rentingPeriod.start || !rentingPeriod.end) return alert("Please select both start and end dates");
-    if (!selectedState || !selectedDistrict || !selectedVillage) return alert("Please select a valid location");
+    if (!name.trim()) return showAlert("Please enter your name", "error");
+    if (!/^\d{10}$/.test(mobile)) return showAlert("Enter a valid 10-digit mobile number", "error");
+    if (!rentingPeriod.start || !rentingPeriod.end) return showAlert("Please select both start and end dates", "error");
+    if (!selectedState || !selectedDistrict || !selectedVillage) return showAlert("Please select a valid location", "error");
     return true;
   };
 
-  const [userName, setUserName]=useState("")
-  const [UserNumber, setUserNumber] = useState("")
-  
-    useEffect(() => {
-      const verifyToken = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          alert("Please log in first.");
-          navigate("/login");
-          return;
-        }
-  
-        try {
-          const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token }),
-          });
-  
-          const data = await response.json();
-          console.log(data)
-          if (response.ok) {
-            setUserName(data.name); // Set name from response
-            setUserNumber(data.mobile); // Set number from response
+  const [userName, setUserName] = useState("");
+  const [UserNumber, setUserNumber] = useState("");
 
-            setName(userName)
-            setMobile(UserNumber)
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in first.");
+        navigate("/login");
+        return;
+      }
 
-          } else {
-            alert(data.error || "Invalid token. Please log in again.");
-            localStorage.removeItem("token");
-            navigate("/login");
-          }
-        } catch (error) {
-          console.error("Token validation error:", error);
-          alert("Something went wrong. Try logging in again.");
+      try {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          setUserName(data.name); // Set name from response
+          setUserNumber(data.mobile); // Set number from response
+
+          setName(userName);
+          setMobile(UserNumber);
+        } else {
+          alert(data.error || "Invalid token. Please log in again.");
           localStorage.removeItem("token");
           navigate("/login");
         }
-      };
-  
-      verifyToken();
-    }, [navigate]);
+      } catch (error) {
+        console.error("Token validation error:", error);
+        alert("Something went wrong. Try logging in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
 
   const handleSubmit = () => {
     if (validate()) {
       const requestData = {
         name,
-        "sender_mobile":mobile,
+        "sender_mobile": mobile,
         hour,
         rentingPeriod,
         location: {
@@ -81,49 +87,42 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
           village: selectedVillage,
         },
         description,
-        "status":"pending",
+        "status": "pending",
         machinedata,
       };
 
-
-      async function senddata(){
+      async function senddata() {
         try {
-          const response = await fetch("https://krishi-wala.onrender.com/machine_request/",{
-            method:"POST",
-            headers:{
-              'Content-Type':"application/json"
+          const response = await fetch("https://krishi-wala.onrender.com/machine_request/", {
+            method: "POST",
+            headers: {
+              'Content-Type': "application/json",
             },
-            body:JSON.stringify(requestData)
-          })
-          if(!response.ok){
+            body: JSON.stringify(requestData),
+          });
+          if (!response.ok) {
             const error = await response.text();
-            throw new Error(error)
+            throw new Error(error);
           }
-          const data = await response.json()
-  
-          console.log(data)
-          alert(data.message)
-        }
-        catch(e){
-          if(e.name === "TypeError" )
-            alert("Connection failed")
+          const data = await response.json();
+
+          console.log(data);
+          showAlert(data.message, "success");
+        } catch (e) {
+          if (e.name === "TypeError") showAlert("Connection failed", "error");
           else {
-            alert("something went wrong")
-            console.log(e.message)
+            showAlert("Something went wrong", "error");
+            console.log(e.message);
           }
         }
       }
-  senddata();
-   alert("request sent")
 
-
-
-      console.log("Booking Request Data:", requestData);
+      senddata();
       setOpen(false); // Close modal
     }
   };
-  const inputClass =
-  "text-black flex flex-col text-base";
+
+  const inputClass = "text-black flex flex-col text-base";
   const placeholder = "bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full";
 
   return (
@@ -131,7 +130,6 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black opacity-30 " />
         <Dialog.Content className="fixed top-5/9 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-green-100 text-black border-green-600 border-2 shadow-lg p-6 rounded-lg w-96">
-
           <Dialog.Close asChild>
             <button
               className="absolute top-3 right-3 text-white text-2xl font-bold hover:text-red-500"
@@ -150,7 +148,6 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               type="text"
               placeholder="Enter Your Name"
               value={userName}
-              // onChange={(e) => setName(e.target.value)}
               className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
@@ -158,7 +155,6 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
               type="text"
               placeholder="Enter Mobile Number"
               value={UserNumber}
-              // onChange={(e) => setMobile(e.target.value)}
               className="bg-white text-black rounded-xl p-2 border-gray-800 border-2 w-full"
             />
 
@@ -192,15 +188,15 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
             />
 
             <SelectAddress
-            selectedState={selectedState}
-            selectedDistrict={selectedDistrict}
-            selectedVillage={selectedVillage}
-            setSelectedState={setSelectedState}
-            setSelectedDistrict={setSelectedDistrict}
-            setSelectedVillage={setSelectedVillage}
-            className={inputClass}
-            placeholder={placeholder}
-          />
+              selectedState={selectedState}
+              selectedDistrict={selectedDistrict}
+              selectedVillage={selectedVillage}
+              setSelectedState={setSelectedState}
+              setSelectedDistrict={setSelectedDistrict}
+              setSelectedVillage={setSelectedVillage}
+              className={inputClass}
+              placeholder={placeholder}
+            />
 
             <textarea
               placeholder="Enter Description"
@@ -223,6 +219,18 @@ function BookingRequestMachine({ open, setOpen, machinedata }) {
           </div>
         </Dialog.Content>
       </Dialog.Portal>
+
+      {alertMessage && (
+        <div className="fixed top-8 left-1/2 transform -translate-x-1/2 z-50">
+          <div className={`p-4 rounded-lg font-medium shadow-lg max-w-sm w-full text-center
+            ${alertType === "error"
+              ? "bg-red-200 text-red-800 border-l-4 border-red-500"
+              : "bg-green-200 text-green-800 border-l-4 border-green-500"
+            }`}>
+            {alertMessage}
+          </div>
+        </div>
+      )}
     </Dialog.Root>
   );
 }

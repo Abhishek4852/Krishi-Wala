@@ -1,7 +1,7 @@
 import { Home, MessageSquare, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
+function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user, setIsChatOpen }) {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -9,12 +9,18 @@ function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
     navigate("/login");
   };
 
+  const handleChatSupportClick = () => {
+    window.dispatchEvent(new Event("open-chat-support"));
+    setSidebarOpen(false);    // Close sidebar
+    setIsChatOpen(true);      // Open chatbot
+  };
+
   return (
     <>
       {/* Overlay for Mobile */}
       {isMobile && sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-40 z-40"
+          className="fixed inset-0 bg-opacity-40 z-40"
           onClick={() => setSidebarOpen(false)}
         ></div>
       )}
@@ -23,10 +29,10 @@ function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
       <div
         className={`${
           isMobile
-            ? `fixed top-2 left-0 h-full w-64 bg-green-800 text-white mt-12 p-6 shadow-lg transform transition-transform duration-300 z-50 ${
+            ? `fixed top-17 left-0 h-full w-64 bg-green-800 text-white p-6 shadow-lg transform transition-transform duration-300 z-50 ${
                 sidebarOpen ? "translate-x-0" : "-translate-x-full"
               }`
-            : `fixed left-0 h-full w-64 bg-green-800 text-white p-6 shadow-lg z-40 mt-14 ${
+            : `fixed top-17 left-0 h-full w-64 bg-green-800 text-white p-6 shadow-lg z-40 ${
                 sidebarOpen ? "" : "hidden"
               }`
         }`}
@@ -55,15 +61,22 @@ function ProfileSidebar({ sidebarOpen, setSidebarOpen, isMobile, user }) {
 
         {/* Navigation */}
         <div className="mt-6 flex flex-col gap-6 font-medium">
-          <a href="#" className="flex items-center gap-3 hover:text-yellow-300 transition">
+          <a
+            href="/"
+            className="flex items-center gap-3 hover:text-yellow-300 transition"
+          >
             <Home size={24} />
             <span>Home</span>
           </a>
 
-          <a href="#" className="flex items-center gap-3 hover:text-yellow-300 transition">
+          {/* Chat Support opens chatbot and closes sidebar */}
+          <button
+            onClick={handleChatSupportClick}
+            className="flex items-center gap-3 hover:text-yellow-300 transition"
+          >
             <MessageSquare size={24} />
             <span>Chat Support</span>
-          </a>
+          </button>
 
           <button
             onClick={handleLogout}

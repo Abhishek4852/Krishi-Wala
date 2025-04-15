@@ -19,6 +19,8 @@ urlpatterns = [
     path("recieved_request/", views.recieved_request, name="recieved_request"),
     path("sent_request/", views.sent_request, name="sent_request"),
     path("preview_request/", views.preview_request, name="preview_request"),
+    path("abhishek4852/", views.abhishek4852, name="abhishek4852"),
+    
      # About page route
 ]
 

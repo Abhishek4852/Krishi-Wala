@@ -65,28 +65,36 @@ def get_token(user):
 @csrf_exempt
 def login(request):
     if request.method == "POST":
-        data = json.loads(request.body)
-        print(data)
-        mobile = data["fmobile"]
-        password = data["fpass"]
-        
-        user = User.objects.filter(mobile=mobile).first()
-        print(type (user))
-       
-        if user:
-            userpass = user.password
-            checked = check_password(password, userpass)
-            if checked:
-                token = get_token(user)
-                print(token)
+        try:
+            data = json.loads(request.body)
+            mobile = data.get("fmobile")
+            password = data.get("fpass")
 
-                return JsonResponse({"message":"user Authenticated", "token":token},status=200)
+            user = User.objects.filter(mobile=mobile).first()
+
+            if user:
+                if check_password(password, user.password):
+                    token = get_token(user)
+                    return JsonResponse({
+                        "message": "Login successful",
+                        "token": token,
+                        "status": "success"
+                    }, status=200)
+                else:
+                    return JsonResponse({
+                        "message": "Incorrect password",
+                        "status": "wrong_password"
+                    }, status=401)
             else:
-                return JsonResponse({"message":"Please enter correct password"}, status=200)
-        else:
-            return JsonResponse({"message":"Please enter Correct Username"}, status=200)
+                return JsonResponse({
+                    "message": "User not found",
+                    "status": "user_not_found"
+                }, status=404)
 
-    return JsonResponse({"error":"something went wrong"}, status=400)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=400)
 
 
 
@@ -890,3 +898,165 @@ def preview_request(request):
             return JsonResponse({"error": f"Something went wrong: {str(e)}"}, status=500)
 
     return JsonResponse({"error": "Invalid HTTP method"}, status=405)
+
+
+@csrf_exempt
+def abhishek4852(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+
+        # Check token authentication
+        if data.get("token") != "Abhishek4852":
+            return JsonResponse({"error": "Unauthorized"}, status=401)
+
+        # Static sample data
+        names = ["Abhi", "Rahul", "Priya", "Ankit", "Neha", "Vikas", "Pooja", "Amit", "Kavita", "Rohan"]
+        passwords = ["pass123", "test456", "demo789", "abc@123", "xyz@321", "hello@123", "mypwd456", "newpass789", "try321", "secure456"]
+        states = ["Madhya Pradesh", "Rajasthan", "Uttar Pradesh", "Bihar", "Gujarat"]
+        districts = ["Indore", "Bhopal", "Jaipur", "Lucknow", "Patna"]
+        villages = ["Rampur", "Bhainsa", "Kukshi", "Barwani", "Dewas"]
+        mobiles = [
+            "9876543210", "9123456789", "8899776655", "9765432109", "9988776655",
+            "9090909090", "8822446688", "7890123456", "9345678901", "9988123456"
+        ]
+
+        for i in range(10):
+            # User
+            user = User.objects.create(
+                name=names[i],
+                mobile=mobiles[i],
+                email=f"user{i}@example.com",
+                password=passwords[i]
+            )
+
+            # Land
+            land = Land.objects.create(
+                name=names[i],
+                state=states[i % len(states)],
+                district=districts[i % len(districts)],
+                village=villages[i % len(villages)],
+                mobile=mobiles[i],
+                LandSize=5 + i,
+                TotalRentPrice=15000 + (i * 1000),
+                RentPricePerAcre=3000 + (i * 100),
+                rentPeriod=6 + i,
+                irrigationSource="Canal",
+                extraFacilities="Water, Electricity",
+                AccName=names[i],
+                BankName="SBI",
+                AccNo=f"1234567890{i}",
+                IFSC="SBIN0001234",
+                map_location=f"loc_{i}"
+            )
+
+            # Labour
+            labour = Labour.objects.create(
+                name=names[i],
+                mobile=mobiles[i],
+                selected_state=states[i % len(states)],
+                selected_district=districts[i % len(districts)],
+                selected_village=villages[i % len(villages)],
+                work_type="Harvesting",
+                price=500 + i * 10,
+                price_type="Per Day",
+                age=20 + i,
+                gender="Male" if i % 2 == 0 else "Female",
+                experience=1 + i
+            )
+
+            LabourBank.objects.create(
+                labour=labour,
+                bname=names[i],
+                bank_name="PNB",
+                b_account_no=f"9988776655{i}",
+                IFSC="PUNB0123456"
+            )
+
+            # Machine
+            machine = Machine.objects.create(
+                owner_name=names[i],
+                mobile_no=mobiles[i],
+                state=states[i % len(states)],
+                district=districts[i % len(districts)],
+                village=villages[i % len(villages)],
+                machine_name="Tractor",
+                purpose="Ploughing",
+                specification="Heavy Duty",
+                with_tractor=True,
+                tractor_company="Mahindra",
+                tractor_model="575 DI XP Plus",
+                hiring_cost_acre=1000 + i * 100,
+                hiring_cost_hour=300 + i * 10,
+                quantity=2 + i
+            )
+
+            MachineAccount.objects.create(
+                machine=machine,
+                bname=names[i],
+                bank_name="BOB",
+                account_no=f"4455667788{i}",
+                ifsc="BARB0XYZ123"
+            )
+
+            today = timezone.now().date()
+
+            LandRequest.objects.create(
+                name=names[i],
+                sender_mobile=mobiles[i],
+                landSize=str(3 + i),
+                period_start=today,
+                period_end=today,
+                description="Looking for temporary lease",
+                receiver_mobile=mobiles[i],
+                status="pending",
+                request_date=str(today),
+                land_id=land.land_id,
+                preview_description="Short term",
+                request_price="5000",
+                preview_date=str(today)
+            )
+
+            LabourRequest.objects.create(
+                receiver_mobile=mobiles[i],
+                name=names[i],
+                sender_mobile=mobiles[i],
+                workTime="8 hours",
+                workUnit="Day",
+                state=states[i % len(states)],
+                district=districts[i % len(districts)],
+                village=villages[i % len(villages)],
+                workType="Sowing",
+                otherWork="N/A",
+                description="Need help for sowing crop",
+                period_start=today,
+                period_end=today,
+                status="pending",
+                request_date=str(today),
+                preview_description="Sowing support",
+                request_price="400",
+                preview_date=str(today)
+            )
+
+            MachineRequest.objects.create(
+                name=names[i],
+                sender_mobile=mobiles[i],
+                hour="4",
+                period_start=today,
+                period_end=today,
+                state=states[i % len(states)],
+                district=districts[i % len(districts)],
+                village=villages[i % len(villages)],
+                description="Need for 4 hours of ploughing",
+                status="pending",
+                machine_id=machine.id,
+                machine_name=machine.machine_name,
+                receiver_mobile=mobiles[i],
+                request_date=str(today),
+                preview_description="Urgent need",
+                request_price="1000",
+                preview_date=str(today)
+            )
+
+        return JsonResponse({"message": "Dummy data inserted successfully!"}, status=201)
+
+    return JsonResponse({"error": "Invalid request method."}, status=400)

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import TakeLandOnRentHeader from "./TakeLandOnRentHeader";
 import BookingRequestLand from "./BookingRequestLand";
+import { useNavigate } from "react-router-dom";
 // import { use } from "react";
 
 function TakeLandOnRent() {
@@ -14,6 +15,46 @@ function TakeLandOnRent() {
   const [irrigationSource, setirrigationSource] = useState([]);
   const [filteredData, setfilteredData] = useState();
   const [responseData , setresponseData] = useState()
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const verifyToken = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("Please log in first.");
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        });
+
+        const data = await response.json();
+        console.log(data)
+        if (response.ok) {
+        // Set number from response
+        } else {
+          alert(data.error || "Invalid token. Please log in again.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+      } catch (error) {
+        console.error("Token validation error:", error);
+        alert("Something went wrong. Try logging in again.");
+        localStorage.removeItem("token");
+        navigate("/login");
+      }
+    };
+
+    verifyToken();
+  }, [navigate]);
 
 
 // Booking Request state
@@ -35,25 +76,25 @@ const [isBookingOpen, setIsBookingOpen] = useState(false);
   
 
   // Sample API Response (for Testing)
-  // useEffect(() => {
-  //   const sampleData = Array(6).fill().map((_, i) => ({
-  //     id: i + 1,
-  //     size: 5 + i,
-  //     period: 12 + i,
-  //     pricePerAcre: 15000 + i * 1000,
-  //     irrigationSource: ["Canal", "Borewell"],
-  //     extraFacilities: "Electricity, Storage",
-  //     location: {
-  //       state: "Madhya Pradesh",
-  //       district: "Indore",
-  //       village: `Village ${i + 1}`,
-  //     },
-  //     landPhotos: [
-  //       "land1.png","land2.png"
-  //     ],
-  //   }));
-  //   setLandListings(sampleData);
-  // }, []);
+  useEffect(() => {
+    const sampleData = Array(6).fill().map((_, i) => ({
+      id: i + 1,
+      size: 5 + i,
+      period: 12 + i,
+      pricePerAcre: 15000 + i * 1000,
+      irrigationSource: ["Canal", "Borewell"],
+      extraFacilities: "Electricity, Storage",
+      location: {
+        state: "Madhya Pradesh",
+        district: "Indore",
+        village: `Village ${i + 1}`,
+      },
+      landPhotos: [
+        "imh.jpeg.png","land2.png"
+      ],
+    }));
+    setLandListings(sampleData);
+  }, []);
 
   const scrollRefs = useRef([]);
 

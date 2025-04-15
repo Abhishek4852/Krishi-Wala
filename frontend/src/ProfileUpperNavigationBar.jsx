@@ -53,16 +53,7 @@ function ProfileUpperNavigationBar() {
 
   return (
     <>
-      {/* Sidebar */}
-      <ProfileSidebar
-        sidebarOpen={isMobile ? isSidebarOpen : true}
-        setSidebarOpen={setIsSidebarOpen}
-        isMobile={isMobile}
-        user={{
-          name: userName,
-          image: "/geetanshi-profile.jpg",
-        }}
-      />
+     
 
       {/* Top Navbar */}
       <nav className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-800 shadow-md fixed p-4 w-full top-0 left-0 z-50 ">
@@ -70,7 +61,7 @@ function ProfileUpperNavigationBar() {
           <div className="flex items-center gap-3">
             {isMobile && (
               <button onClick={() => setIsSidebarOpen(true)}>
-                <Menu className="text-white" size={28} />
+                <Menu className="text-green-800" size={28} />
               </button>
             )}
             {!isMobile && (
@@ -93,6 +84,16 @@ function ProfileUpperNavigationBar() {
           </div>
         </div>
       </nav>
+       {/* Sidebar */}
+       <ProfileSidebar
+        sidebarOpen={isMobile ? isSidebarOpen : true}
+        setSidebarOpen={setIsSidebarOpen}
+        isMobile={isMobile}
+        user={{
+          name: userName,
+          image: "/geetanshi-profile.jpg",
+        }}
+      />
     </>
   );
 }

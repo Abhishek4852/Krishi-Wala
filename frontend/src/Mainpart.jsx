@@ -15,86 +15,105 @@ const Mainpart = () => {
   const navigate = useNavigate();
 
   const handleClick = async (link) => {
-    try {
-      const token = localStorage.getItem("token");
+    navigate(link);
+    // try {
+    //   const token = localStorage.getItem("token");
        
-      // console.log("token data => ", token)
+    //   // console.log("token data => ", token)
 
-      if (!token) {
-        alert("You need to log in first!");
-        navigate("/login");
-        return;
-      }
+    //   if (!token) {
+    //     alert("You need to log in first!");
+    //     navigate("/login");
+    //     return;
+    //   }
 
-      // Verify token (if necessary)
-      const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({"token":`${token}`})
-      });
+    //   // Verify token (if necessary)
+    //   const response = await fetch("https://krishi-wala.onrender.com/token_validation/", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       // Authorization: `Bearer ${token}`,
+    //     },
+    //     body: JSON.stringify({"token":`${token}`})
+    //   });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert(data.message)
-        navigate(link);
-      } else {
-        alert(data.error);
-        localStorage.removeItem("token");
-        navigate("/login");
-      }
-    } catch (error) {
-      console.error("Error verifying token:", error);
-      alert("Something went wrong. Please try again.");
-    }
+    //   const data = await response.json();
+    //   if (response.ok) {
+    //     alert(data.message)
+    //     navigate(link);
+    //   } else {
+    //     alert(data.error);
+    //     localStorage.removeItem("token");
+    //     navigate("/login");
+    //   }
+    // } catch (error) {
+    //   console.error("Error verifying token:", error);
+    //   alert("Something went wrong. Please try again.");
+    // }
   };
 
   return (
     <div className="flex flex-col items-center gap-6 p-6  bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200">
-      <div className="mt-10 bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200">
-      <div className="text-2xl text-black flex flex-wrap w-full justify-evenly mb-10">
+      <div className="mt-20 bg-gradient-to-br from-blue-100 via-blue-50  to-blue-200 ">
+      <div className="text-2xl text-black w-full flex flex-col sm:grid sm:grid-cols-3 md:flex md:flex-row md:flex-wrap sm:justify-evenly justify-center mb-10">
   <button
     onClick={() => handleClick("/PostLand")}
-    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+    className="relative font-semibold py-2 px-4 m-2 rounded-full shadow-md min-w-0 overflow-hidden group transition duration-300 ease-linear border-b-4 border-green-700 bg-gradient-to-br from-green-100 via-green-50 to-green-200 text-green-900"
   >
-    Land Registration
+    <span className="absolute inset-0 bg-green-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out z-0"></span>
+    <span className="relative z-10 group-hover:text-white transition-colors duration-300 ease-in-out">
+      Land Registration
+    </span>
   </button>
 
   <button
     onClick={() => handleClick("/TakeLandOnRent")}
-    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+    className="relative font-semibold py-2 px-4 m-2 rounded-full shadow-md min-w-0 overflow-hidden group transition duration-300 ease-linear border-b-4 border-green-700 bg-gradient-to-br from-green-100 via-green-50 to-green-200 text-green-900"
   >
-    Search Land
+    <span className="absolute inset-0 bg-green-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out z-0"></span>
+    <span className="relative z-10 group-hover:text-white transition-colors duration-300 ease-in-out">
+      Search Land
+    </span>
   </button>
 
   <button
     onClick={() => handleClick("/MachineRegistration")}
-    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+    className="relative font-semibold py-2 px-4 m-2 rounded-full shadow-md min-w-0 overflow-hidden group transition duration-300 ease-linear border-b-4 border-green-700 bg-gradient-to-br from-green-100 via-green-50 to-green-200 text-green-900"
   >
-    Machine Registration
+    <span className="absolute inset-0 bg-green-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out z-0"></span>
+    <span className="relative z-10 group-hover:text-white transition-colors duration-300 ease-in-out">
+      Machine Registration
+    </span>
   </button>
 
   <button
     onClick={() => handleClick("/SearchMachinary")}
-    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+    className="relative font-semibold py-2 px-4 m-2 rounded-full shadow-md min-w-0 overflow-hidden group transition duration-300 ease-linear border-b-4 border-green-700 bg-gradient-to-br from-green-100 via-green-50 to-green-200 text-green-900"
   >
-    Search Machine
+    <span className="absolute inset-0 bg-green-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out z-0"></span>
+    <span className="relative z-10 group-hover:text-white transition-colors duration-300 ease-in-out">
+      Search Machine
+    </span>
   </button>
 
   <button
     onClick={() => handleClick("/LabourRegistration")}
-    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+    className="relative font-semibold py-2 px-4 m-2 rounded-full shadow-md min-w-0 overflow-hidden group transition duration-300 ease-linear border-b-4 border-green-700 bg-gradient-to-br from-green-100 via-green-50 to-green-200 text-green-900"
   >
-    Labour Registration
+    <span className="absolute inset-0 bg-green-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out z-0"></span>
+    <span className="relative z-10 group-hover:text-white transition-colors duration-300 ease-in-out">
+      Labour Registration
+    </span>
   </button>
 
   <button
     onClick={() => handleClick("/SearchLabour")}
-    className="bg-gradient-to-br from-green-100 via-green-50 to-green-200 border-b-4 border-green-700 text-green-900 hover:bg-blue-700 hover:text-black font-semibold py-2 px-4 rounded-full m-2 shadow-md transition-all duration-300 ease-linear"
+    className="relative font-semibold py-2 px-4 m-2 rounded-full shadow-md min-w-0 overflow-hidden group transition duration-300 ease-linear border-b-4 border-green-700 bg-gradient-to-br from-green-100 via-green-50 to-green-200 text-green-900"
   >
-    Search Labour
+    <span className="absolute inset-0 bg-green-800 -translate-x-full group-hover:translate-x-0 transition-transform duration-300 ease-in-out z-0"></span>
+    <span className="relative z-10 group-hover:text-white transition-colors duration-300 ease-in-out">
+      Search Labour
+    </span>
   </button>
 </div>
 

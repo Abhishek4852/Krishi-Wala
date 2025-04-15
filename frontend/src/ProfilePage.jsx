@@ -7,11 +7,13 @@ import PreviewedRequestTable from "./PreviewedRequestTable";
 import ChatSupport from "./ChatSupport";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import ProfileSidebar from "./ProfileSidebar";
 
 const ProfilePage = () => {
   const [userName, setUserName] = useState(""); // Will be set from token data
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
     const verifyToken = async () => {
@@ -58,10 +60,12 @@ const ProfilePage = () => {
 
       {/* Sidebar */}
       <ProfileSidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        userName={userName}
-      />
+  sidebarOpen={sidebarOpen}
+  setSidebarOpen={setSidebarOpen}
+  userName={userName}
+  setIsChatOpen={setIsChatOpen} // ✅ Pass the setter function
+/>
+
 
       {/* Main Content */}
       <div className="min-h-screen bg-gradient-to-br from-blue-100 via-blue-50 to-blue-200 pt-24 px-4 sm:px-6 lg:px-8 lg:ml-64">
@@ -131,7 +135,8 @@ const ProfilePage = () => {
 
           {/* Chat Support - Full Width */}
           <div className="col-span-full">
-            <ChatSupport />
+          {/* {isChatOpen && <ChatSupport />} */}
+          <ChatSupport />
           </div>
 
           {/* Bookings & Transactions */}
