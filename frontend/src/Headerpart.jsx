@@ -12,7 +12,7 @@ export default function Headerpart() {
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    navigate("https://krishi-wala-fkfg.vercel.app/login");
+    navigate("/login");
   };
 
 
@@ -140,7 +140,7 @@ export default function Headerpart() {
             <div>
             <div 
   className="flex items-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-xs cursor-pointer hover:text-yellow-500"
-  onClick={() => navigate("https://krishi-wala-fkfg.vercel.app/profilepage")}
+  onClick={() => navigate("/ProfilePage")}
 >
   <FaUser className="text-white text-2xl mr-2 shrink-0" />
   <p className="font-semibold text-white text-lg truncate">{userData.name}</p>
@@ -159,7 +159,7 @@ export default function Headerpart() {
               <button
                 className="w-full px-4 py-2 bg-green-900 text-white font-bold rounded-full hover:bg-yellow-100"
                 onClick={() => {
-                  navigate("https://krishi-wala-fkfg.vercel.app/Register");
+                  navigate("/Register");
                   setMenuOpen(false);
                 }}
               >
