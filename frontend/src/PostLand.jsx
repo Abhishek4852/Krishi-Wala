@@ -89,14 +89,63 @@ setMobile(data.mobile);
   }, [navigate]);
 
 
+  const [addressStyles, setAddressStyles] = useState({
+    districtClass: "",
+    villageClass: ""
+  });
 
+  useEffect(() => {
+    // Rule 1
+    if (selectedState && selectedDistrict == "" && selectedVillage == "") {
+      setAddressStyles({
+        districtClass: "text-red-500",
+        villageClass: ""
+      });
+    }
+    // Rule 2
+    else if (
+      selectedState && selectedDistrict &&
+      selectedDistrict !== "" &&
+      selectedVillage === ""
+    ) {
+      setAddressStyles({
+        districtClass: "",
+        villageClass: "text-red-500"
+      });
+    }
+    // Rule 3
+    else if (
+      selectedState && selectedDistrict !== "" && selectedVillage !== ""
+    ) {
+      setAddressStyles({
+        districtClass: "",
+        villageClass: ""
+      });
+    } else {
+      // Default fallback (optional)
+      setAddressStyles({
+        districtClass: "",
+        villageClass: ""
+      });
+    }
+  }, [selectedState, selectedDistrict, selectedVillage]);
 
 
 
   const handleSubmit = () => {
 
-    if(isallfieldentered()){
-        if(isallfieldvalid()){
+    if (!isallfieldentered()) {
+      return; // Stop here if any field is missing, alert is already shown
+    }
+  
+    if (!isallfieldvalid()) {
+      return; // Stop if validation fails, alert is already shown
+    }
+  
+
+
+    // if(isallfieldentered()){
+    //     if(isallfieldvalid()){
           const formData = new FormData();
     
           // Append land details
@@ -124,73 +173,147 @@ setMobile(data.mobile);
             }
           }
           
-              console.log(formData) /// ensuring form data collected properly 
+              console.log("my data " ,formData) /// ensuring form data collected properly 
               // registration data sent to backend django
-              async function senddata(){
+              async function senddata() {
+                try {
+                  const response = await fetch("https://krishi-wala.onrender.com/post_land/", {
+                    method: "POST",
+                    body: formData,
+                  });
               
-                try{
-                const response =  await fetch("https://krishi-wala.onrender.com/post_land/",
-                  {
-                    method:"POST",
-                    
-                    body:formData
-                  })
-                  
-                  if(!response.ok){
-                      const error = await response.text();
-                    throw new Error(error);
+                  const data = await response.json();
+              
+                  if (!response.ok) {
+                    // Custom error message from backend
+                    const errorMessage = data?.error?.message || "Something went wrong";
+                    throw new Error(errorMessage);
                   }
-                const data = await response.json();
-                 console.log(data);
-                 showAlert("registered successfully")
-                 navigate("/");
-  
+              
+                  console.log("data received", data);
+              
+                  // Proper check for success message
+                 
+                  
+                    showAlert(data.message || "Registered successfully", 'success');
+                    setTimeout(() => navigate("/"), 1500);
+                    
+                // Redirect after showing success alert
+                 
+              
+                } catch (error) {
+                  if (error.name === "TypeError") {
+                    showAlert("Network Connection failed", "error");
+                    console.log("Network Connection failed ", error.message);
+                  } else {
+                    showAlert(error.message || "Something went wrong", "error");
+                    console.log("Other error: ", error.message);
+                  }
                 }
-                catch(error){
-                  if(error.name === "TypeError"){
-                    showAlert("Network Connection failed","error")
-                  console.log("Network Connection failed ",error.message);
-                  }else{ 
-                    showAlert("Something went wrong","error")
-                   console.log("other error ",error.message);
-                }}
-                
-                   
               }
-            
+              
+              console.log("other error ");
             senddata();
-        }
-    } else {
-      console.log("ente all field")
-      showAlert("Please Enter all detatails","error")
-    }
+            console.log("ERR 2 : other error ");
+
+    //     }
+    // } else {
+    //   console.log("ente all field")
+    //   showAlert("Please Enter all detatails","error")
+    // }
 
     
   }
-
-function isallfieldentered(){
-  console.log(landOwner)
-  console.log(mobile)
-  console.log(rentPrice)
-  console.log(rentPeriod)
-  console.log(irrigationSource)
-  console.log(name)
-  console.log(bankName)
-    return (landOwner !== ""  &&  mobile !== "" && rentPrice !== "" && rentPeriod !== "" && irrigationSource !== "" && name !== "" && bankName !== "" && accountNo !== "" && IFSC !== "" && rentPrice > 0 && TotalRentPrice > 0 && LandSize > 0 ) 
-}
-
-function isallfieldvalid(){
-    return (isAlpha() && validlocation() && isValidMobile() && isrentprice() && irrigationvalid() && validatebankname() && isvalidaccountno() && isvalidIFSC())
-}
-
-function isAlpha() {
-    if (/^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(name) && /^[A-Za-z]+( [A-Za-z]+){0,3}$/.test(landOwner) ) {
-      return true;
-    } else {
-      showAlert("Please enter a valid name","error");
+  function isallfieldentered() {
+    if (!landOwner || landOwner.trim() === "") {
+      showAlert("Please enter the Land Owner's name.", "error");
       return false;
     }
+  
+    if (!mobile || mobile.trim() === "") {
+      showAlert("Please enter the Mobile Number.", "error");
+      return false;
+    }
+  
+    if (!rentPrice || rentPrice <= 0) {
+      showAlert("Please enter a valid Rent Price.", "error");
+      return false;
+    }
+  
+    if (!rentPeriod || rentPeriod.trim() === "") {
+      showAlert("Please select the Rent Period.", "error");
+      return false;
+    }
+  
+    if (!irrigationSource || irrigationSource.trim() === "") {
+      showAlert("Please enter the Irrigation Source.", "error");
+      return false;
+    }
+  
+    if (!name || name.trim() === "") {
+      showAlert("Please enter the Account Holder's Name.", "error");
+      return false;
+    }
+  
+    if (!bankName || bankName.trim() === "") {
+      showAlert("Please enter the Bank Name.", "error");
+      return false;
+    }
+  
+    if (!accountNo || accountNo.trim() === "") {
+      showAlert("Please enter the Account Number.", "error");
+      return false;
+    }
+  
+    if (!IFSC || IFSC.trim() === "") {
+      showAlert("Please enter the IFSC Code.", "error");
+      return false;
+    }
+  
+    if (!TotalRentPrice || TotalRentPrice <= 0) {
+      showAlert("Total Rent Price must be greater than 0.", "error");
+      return false;
+    }
+  
+    if (!LandSize || LandSize <= 0) {
+      showAlert("Land Size must be greater than 0.", "error");
+      return false;
+    }
+  
+    // All fields are valid
+    return true;
   }
+  
+// function isallfieldentered(){
+//   console.log(landOwner)
+//   console.log(mobile)
+//   console.log(rentPrice)
+//   console.log(rentPeriod)
+//   console.log(irrigationSource)
+//   console.log(name)
+//   console.log(bankName)
+//     return (landOwner !== ""  &&  mobile !== "" && rentPrice !== "" && rentPeriod !== "" && irrigationSource !== "" && name !== "" && bankName !== "" && accountNo !== "" && IFSC !== "" && rentPrice && TotalRentPrice > 0 && LandSize > 0 ) 
+// }
+
+// function isallfieldvalid(){
+//     return (isAlpha() && validlocation() && isValidMobile() && isrentprice() && irrigationvalid() && validatebankname() && isvalidaccountno() && isvalidIFSC())
+// }
+function isallfieldvalid(){
+  return (isAlpha() && isValidMobile() && isrentprice() && irrigationvalid() && validatebankname() && isvalidaccountno() && isvalidIFSC())
+}
+function isAlpha() {
+  const trimmedName = name.trim();
+
+  // This regex allows 1 to 4 words, each containing only letters
+  const regex = /^[A-Za-z]+(?: [A-Za-z]+){0,3}$/;
+
+  if (regex.test(trimmedName)) {
+    return true;
+  } else {
+    showAlert("Please enter a valid Account holder name", "error");
+    return false;
+  }
+}
 
   function isValidMobile() {
     if (/^[6-9]\d{9}$/.test(mobile) === true) {
@@ -405,6 +528,8 @@ function isAlpha() {
             setSelectedVillage={setSelectedVillage}
             className={inputClass}
             placeholder={placeholder}
+            districtClass={addressStyles.districtClass}
+            villageClass={addressStyles.villageClass}
           />
   
           {/* You can continue using the same wrapping for the BankDetails section */}

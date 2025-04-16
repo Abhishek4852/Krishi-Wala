@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import jsonData from "./address_data.json"; // Import JSON file
 
-function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setSelectedDistrict, selectedVillage, setSelectedVillage , className = "",placeholder=""  }) {
+function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setSelectedDistrict, selectedVillage, setSelectedVillage , className = "",placeholder="" , districtClass="", villageClass=""}) {
   const [districts, setDistricts] = useState([]);
   const [villages, setVillages] = useState([]);
 
@@ -35,9 +35,9 @@ function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setS
     </select>
   </div>
 
-  <div className={` ${className} `}>
+  <div className={` ${className} ${districtClass} `}>
     <label className="font-semibold block mb-1">Select District</label>
-    <select onChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState} className={placeholder}>
+    <select onChange={handleDistrictChange} value={selectedDistrict} disabled={!selectedState} className={`${placeholder} ${districtClass} `}>
       <option value="">Select District</option>
       {districts.map((district, index) => (
         <option key={index} value={district}>{district}</option>
@@ -45,9 +45,9 @@ function SelectAddress({ selectedState, setSelectedState, selectedDistrict, setS
     </select>
   </div>
 
-  <div className={` ${className} `}>
+  <div className={` ${className} ${villageClass} `}>
     <label className="font-semibold block mb-1">Select Village</label>
-    <select onChange={(e) => setSelectedVillage(e.target.value)} value={selectedVillage} disabled={!selectedDistrict} className={placeholder}>
+    <select onChange={(e) => setSelectedVillage(e.target.value)} value={selectedVillage} disabled={!selectedDistrict} className={`${placeholder} ${villageClass} `}>
       <option value="">Select Village</option>
       {villages.map((village, index) => (
         <option key={index} value={village}>{village}</option>

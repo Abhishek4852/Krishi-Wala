@@ -14,6 +14,7 @@ function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccou
 
     {showFields && (
       <div className="mt-4 space-y-5">
+        <label className="font-semibold"> Account Holder Name</label>
         <input
           type="text"
           className={placeholder}
@@ -21,7 +22,8 @@ function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccou
           value={name}
           placeholder="Enter Account Holder Name"
         />
-
+        
+        <label className="font-semibold"> Set Bank Name</label>
         <input
           type="text"
           className={placeholder}
@@ -29,7 +31,8 @@ function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccou
           value={bankName}
           placeholder="Enter Bank Name"
         />
-
+        
+        <label className="font-semibold"> Set Account Number</label>
         <input
           type="number"
           className={placeholder}
@@ -38,6 +41,8 @@ function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccou
           placeholder="Enter Account No."
         />
 
+
+      <label className="font-semibold"> Enter  IFSC  Code</label>
         <input
           type="text"
           className={placeholder}
@@ -48,6 +53,7 @@ function BankDetails({ name, setName, bankName, setBankName, accountNo, setAccou
       </div>
     )}
   </div>
+  
 
   );
 }

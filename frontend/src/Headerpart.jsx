@@ -71,7 +71,7 @@ export default function Headerpart() {
         </div>
         <div 
   className="flex items-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-xs cursor-pointer hover:text-yellow-500"
-  onClick={() => navigate("/profilepage")}
+  onClick={() => navigate("/ProfilePage")}
 >
   <FaUser className="text-white text-2xl md:hidden " />
   
@@ -97,7 +97,7 @@ export default function Headerpart() {
         {userData ? (
   <div 
   className="flex items-center whitespace-nowrap overflow-hidden text-ellipsis max-w-[150px] sm:max-w-xs cursor-pointer hover:text-yellow-500"
-  onClick={() => navigate("/profilepage")}
+  onClick={() => navigate("/ProfilePage")}
 >
   <FaUser className="text-white text-2xl mr-2 shrink-0" />
   <p className="font-semibold text-white text-lg truncate">{userData.name}</p>

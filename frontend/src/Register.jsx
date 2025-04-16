@@ -93,8 +93,8 @@ function Register() {
   };
 
   const isValidPassword = () => {
-    if (pass.length < 9 || pass.length > 15) {
-      showAlert("Password must be 9–15 characters.");
+    if (pass.length < 4 || pass > 9) {
+      showAlert("Password length must be between 4-8");
       return false;
     }
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)/;
@@ -160,8 +160,11 @@ function Register() {
               <label className="block text-green-700 font-semibold mb-1">Email ID <span className="text-red-500">*</span></label>
               <input type="text" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setemail(e.target.value)} />
 
-              <label className="block text-green-700 font-semibold mb-1">Password <span className="text-red-500">*</span></label>
+              <label className="block text-green-700 font-semibold mb-1">Create Password  <span className="text-red-500">*</span></label>
               <input type="password" className="w-full p-3 border border-green-500 text-green-800 rounded-xl mb-4" onChange={(e) => setpass(e.target.value)} />
+              <p className="text-xs text-red-600 mb-4 -mt-2">
+  Note:  Enter a password 4–8 characters long, with at least one letter and one number.
+</p>
 
               <label className="block text-green-700 font-semibold mb-1">Confirm Password <span className="text-red-500">*</span></label>
               <input type="password" className="w-full text-green-800 p-3 border border-green-500 rounded-xl mb-6" onChange={(e) => setcnf_pass(e.target.value)} />
