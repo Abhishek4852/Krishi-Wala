@@ -168,7 +168,7 @@ export default function Headerpart() {
               <button
                 className="w-full px-4 py-2 bg-green-900 text-white font-bold rounded-full hover:bg-yellow-100"
                 onClick={() => {
-                  navigate("https://krishi-wala-fkfg.vercel.app/login");
+                  navigate("/login");
                   setMenuOpen(false);
                 }}
               >
