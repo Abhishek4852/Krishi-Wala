@@ -1,12 +1,5 @@
 
-# Krishi-Wala 🌾
+🌾 Kashi Walla - Empowering Farmers Through Digital Access
+Kashi Walla is a real-world solution built to help farmers, landowners, laborers, and machinery owners by streamlining the process of land leasing, labor hiring, and machinery renting through a single, digital platform.
 
-An open-source fullstack platform that connects farmers directly with consumers and retailers.
-
-## Tech Stack- **Frontend:** React + Vite
-- **Backend:** Django + REST Framework
-
----
-
-Made with ❤️ b Abhishek Yaduwanshi and Geetanshi Jain
-
+This system ensures trust, transparency, and ease of access for all stakeholders in agriculture by allowing them to manage everything directly from their mobile or desktop.
