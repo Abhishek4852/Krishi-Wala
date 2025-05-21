@@ -1,6 +1,6 @@
-# 🌾 Kashi Walla
+# 🌾KrishiWala
 
-**Kashi Walla** is a digital platform designed to solve real-world problems faced by farmers in **renting land**, **hiring labor**, and **renting agricultural machinery**. It connects landowners, machinery providers, and laborers directly with farmers through a secure, filtered search and request system.
+**KrishiWala** is a digital platform designed to solve real-world problems faced by farmers in **renting land**, **hiring labor**, and **renting agricultural machinery**. It connects landowners, machinery providers, and laborers directly with farmers through a secure, filtered search and request system.
 
 ---
 
